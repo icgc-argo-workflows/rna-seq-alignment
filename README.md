@@ -1,3 +1,3 @@
 # ICGC ARGO RNA-Seq alignment
 
-Update this to describe your awesome project.
+This repositories collects the tool packages used for RNA-Seq alignments in context of the ICGC ARGO project.

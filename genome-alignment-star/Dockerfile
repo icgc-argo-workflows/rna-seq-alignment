@@ -1,10 +1,54 @@
 FROM ratschlab/wf-base-miniconda4.8.3:v1.0.1
 
-LABEL org.opencontainers.image.source https://github.com/icgc-argo-rna-wg/rna-seq-alignment
+LABEL org.opencontainers.image.source https://github.com/icgc-argo-rna-wg/icgc-argo-rna-seq-alignment
+LABEL org.opencontainers.image.authors Andre Kahles (andre.kahles@inf.ethz.ch)
+LABEL org.opencontainers.image.title ICGC ARGO RNA-Seq alignment image
 
-ENV PATH="/tools:${PATH}"
+ENV PATH="/opt/local:${PATH}"
 
-COPY *.py /tools/
+RUN apt-get update
+RUN apt-get -y install wget zip make gcc g++ libcurl4-openssl-dev libgomp1 bzip2 curl libncurses5-dev libbz2-dev liblzma-dev autotools-dev automake libz-dev pkg-config libtool m4 
+
+# install STAR
+RUN mkdir -p /opt/local/src/STAR && \
+    cd /opt/local/src/STAR && \
+    wget https://github.com/alexdobin/STAR/archive/2.7.2d.tar.gz && \
+    tar -xzvf 2.7.2d.tar.gz && \
+    ln -s /opt/local/src/STAR/STAR-2.7.2d/bin/Linux_x86_64/STAR /usr/local/bin/STAR && \
+    ln -s /opt/local/src/STAR/STAR-2.7.2d/bin/Linux_x86_64/STARlong /usr/local/bin/STARlong
+
+# install samtools 1.10
+RUN cd /tmp \
+    && curl -sSL -o samtools-1.10.tar.bz2 --retry 10 https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2 \
+    && bunzip2 -c samtools-1.10.tar.bz2 |tar xf - \
+    && cd samtools-1.10 \
+    && ./configure --prefix=/usr/local \
+    && make \
+    && make install
+
+# Install OpenJDK-8
+RUN apt-get update && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y ant && \
+    apt-get clean;
+
+RUN mkdir -p /tools
+
+# Picard installation
+RUN curl -sSL -o /tools/picard.jar --retry 10 https://github.com/broadinstitute/picard/releases/download/2.21.8/picard.jar
+
+### get run script
+COPY alignSTAR.py /tools
+
+### set up environment
+ENV PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+ENV LC_ALL=C
+
+RUN groupadd -g 1000 ubuntu &&\
+    useradd -l -u 1000 -g ubuntu ubuntu &&\
+    install -d -m 0755 -o ubuntu -g ubuntu /home/ubuntu
+
+USER ubuntu
 
 ENTRYPOINT ["/usr/bin/env"]
 
