@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/icgc-argo-rna-seq-alignment.icgc-argo-rna-seq-alignment'
+    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/rna-seq-alignment.genome-alignment-star'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
