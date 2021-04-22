@@ -1,0 +1,14 @@
+{
+    "index": "input/test_genome.index_STAR",
+    "gtf": "input/test_annotation.gtf",
+    "input_bam": "input/TEST-PRO.donor1.donor1_sample2_id.S02L1.881ca6cec3adc5a52ef97df5e82aa1f4.lane.bam",
+    "sample": "sample_02_L1",
+    "sjdboverhang": 100,
+    "pair_status": "paired",
+    "publish_dir": "outdir",
+    "container_registry": "ghcr.io",
+    "cpus": 1,
+    "mem": 0.5,
+    "expected_bam": "expected/expected_sample_02_L1_Aligned.out.bam",
+    "expected_junctions": "expected/expected_sample_02_L1_SJ.out.tab"
+}

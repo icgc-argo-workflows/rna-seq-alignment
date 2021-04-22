@@ -88,7 +88,7 @@ def main():
             rgs.append(rg)
     ### this should not happen
     else:
-        sys.exit('Error: need to specify either uBAM input via --input-ubam or fastq input via --input-fastq-r1/--input-fastq-r2!\n')
+        sys.exit('Error: Need to specify either uBAM input via --input-ubam or fastq input via --input-fastq-r1/--input-fastq-r2!\n')
 
     ### figure out correct read command
     read_command = 'cat'

@@ -58,7 +58,7 @@ params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
 
 include { icgcArgoRnaSeqAlignmentSTAR } from '../alignSTAR' params(['cleanup': false, *:params])
 
-process file_smart_diff {
+process diff_bam {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
@@ -70,12 +70,25 @@ process file_smart_diff {
 
   script:
     """
-    samtools view ${output_file} | sort > normalized_output
+    diff <(samtools view ${output_file} | sort) <(samtools view ${expected_file} | sort) \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
+    """
+}
 
-    samtools view ${expected_file} | sort > normalized_expected
+process diff_junctions {
+  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
-    diff normalized_output normalized_expected \
-      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
+  input:
+    path output_file
+    path expected_file
+
+  output:
+    stdout()
+
+  script:
+    """
+    diff <(sort ${output_file}) <(sort ${expected_file}) \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, junction files mismatch." && exit 1 )
     """
 }
 
@@ -88,7 +101,8 @@ workflow checker {
     sample
     sjdboverhang
     pair_status
-    expected_output
+    expected_bam
+    expected_junctions
 
   main:
     icgcArgoRnaSeqAlignmentSTAR(
@@ -100,9 +114,14 @@ workflow checker {
         sjdboverhang
     )
 
-    file_smart_diff(
+    diff_bam(
       icgcArgoRnaSeqAlignmentSTAR.out.bam,
-      expected_output
+      expected_bam
+    )
+
+    diff_junctions(
+      icgcArgoRnaSeqAlignmentSTAR.out.junctions,
+      expected_junctions
     )
 }
 
@@ -115,6 +134,7 @@ workflow {
     params.sample,
     params.sjdboverhang,
     params.pair_status,
-    file(params.expected_output)
+    file(params.expected_bam),
+    file(params.expected_junctions)
   )
 }
