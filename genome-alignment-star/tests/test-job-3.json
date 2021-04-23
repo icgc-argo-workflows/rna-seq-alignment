@@ -1,7 +1,11 @@
 {
     "index": "input/test_genome.index_STAR",
     "gtf": "input/test_annotation.gtf",
-    "input_bam": "input/TEST-PRO.donor1.donor1_sample2_id.S02L1.881ca6cec3adc5a52ef97df5e82aa1f4.lane.bam",
+    "input_files": [
+        "input/sample_02_L1_1.fastq.gz",
+        "input/sample_02_L1_2.fastq.gz"
+    ],
+    "input_format": "fastq",
     "sample": "sample_02_L1",
     "sjdboverhang": 100,
     "pair_status": "paired",

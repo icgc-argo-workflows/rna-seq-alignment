@@ -51,7 +51,8 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 // tool specific parmas go here, add / change as needed
 params.index = "NO_FILE_1" //input/test_genome.index_STAR"
 params.gtf = "NO_FILE_2" //input/test_annotation.gtf"
-params.input_bam = "NO_FILE_3" //input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
+params.input_files = ["NO_FILE_3"]//input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
+params.input_format = "ubam"
 params.sample = ""
 params.sjdboverhang = 100
 params.pair_status = "paired"
@@ -64,9 +65,10 @@ process icgcArgoRnaSeqAlignmentSTAR {
   memory "${params.mem} GB"
 
   input:  
-    path index
-    path gtf
-    path input_bam
+    file index
+    file gtf
+    path input_files
+    val input_format
     val pair_status
     val sample
     val sjdboverhang
@@ -85,7 +87,8 @@ process icgcArgoRnaSeqAlignmentSTAR {
            --threads ${params.cpus} \\
            --sjdbOverhang ${sjdboverhang} \\
            --pair-status ${pair_status} \\
-           --input-ubam ${input_bam} \\
+           --input-files ${input_files} \\
+           --input-format ${input_format} \\
            --mem ${params.mem * 1000} > ${sample}_align.log 2>&1
     """
 }
@@ -96,7 +99,8 @@ workflow {
   icgcArgoRnaSeqAlignmentSTAR(
     file(params.index),
     file(params.gtf),
-    file(params.input_bam),
+    params.input_files.collect({it -> file(it)}),
+    params.input_format,
     params.pair_status,
     params.sample,
     params.sjdboverhang

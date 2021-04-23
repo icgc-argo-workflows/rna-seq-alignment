@@ -70,7 +70,7 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view ${output_file} | sort) <(samtools view ${expected_file} | sort) \
+    diff <(samtools view --no-PG ${output_file} | sort) <(samtools view --no-PG ${expected_file} | sort) \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }
@@ -97,7 +97,8 @@ workflow checker {
   take:
     index
     gtf
-    input_bam
+    input_files
+    input_format
     sample
     sjdboverhang
     pair_status
@@ -108,7 +109,8 @@ workflow checker {
     icgcArgoRnaSeqAlignmentSTAR(
         index,
         gtf,
-        input_bam,
+        input_files,
+        input_format,
         pair_status,
         sample,
         sjdboverhang
@@ -130,7 +132,8 @@ workflow {
   checker(
     file(params.index),
     file(params.gtf),
-    file(params.input_bam),
+    params.input_files.collect({it -> file(it)}),
+    params.input_format,
     params.sample,
     params.sjdboverhang,
     params.pair_status,
