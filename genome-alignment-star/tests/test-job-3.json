@@ -1,0 +1,18 @@
+{
+    "index": "input/test_genome.index_STAR",
+    "gtf": "input/test_annotation.gtf",
+    "input_files": [
+        "input/sample_02_L1_1.fastq.gz",
+        "input/sample_02_L1_2.fastq.gz"
+    ],
+    "input_format": "fastq",
+    "sample": "sample_02_L1",
+    "sjdboverhang": 100,
+    "pair_status": "paired",
+    "publish_dir": "outdir",
+    "container_registry": "ghcr.io",
+    "cpus": 1,
+    "mem": 0.5,
+    "expected_bam": "expected/expected_sample_02_L1_Aligned.out.bam",
+    "expected_junctions": "expected/expected_sample_02_L1_SJ.out.tab"
+}

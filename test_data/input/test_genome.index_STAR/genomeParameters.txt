@@ -1,0 +1,16 @@
+### /opt/bin/STAR   --runMode genomeGenerate   --runThreadN 1   --genomeDir /cluster/work/grlab/projects/projects2020-ICGC-ARGO/testdata/alignment/test_genome.index_STAR   --genomeFastaFiles /cluster/work/grlab/projects/projects2020-ICGC-ARGO/testdata/alignment/test_genome.fa      --genomeSAindexNbases 9   --sjdbGTFfile /cluster/work/grlab/projects/projects2020-ICGC-ARGO/testdata/alignment/test_annotation.gtf   --sjdbOverhang 100
+### GstrandBit 32
+versionGenome	2.7.1a
+genomeFastaFiles	/cluster/work/grlab/projects/projects2020-ICGC-ARGO/testdata/alignment/test_genome.fa 
+genomeSAindexNbases	9
+genomeChrBinNbits	18
+genomeSAsparseD	1
+sjdbOverhang	100
+sjdbFileChrStartEnd	- 
+sjdbGTFfile	/cluster/work/grlab/projects/projects2020-ICGC-ARGO/testdata/alignment/test_annotation.gtf
+sjdbGTFchrPrefix	-
+sjdbGTFfeatureExon	exon
+sjdbGTFtagExonParentTranscript	transcript_id
+sjdbGTFtagExonParentGene	gene_id
+sjdbInsertSave	Basic
+genomeFileSizes	1838626 13140768
