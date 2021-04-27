@@ -48,13 +48,17 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.expected_output = ""
+params.index = "NO_FILE_1/NO_FILE_1"
+params.gtf = "NO_FILE_2"
+params.input_files = ["NO_FILE_3"]
+params.input_format = "ubam"
+params.sample = "sample_01"
+params.pair_status = "paired"
+params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
 
-include { genomeAlignmentHisat2 } from '../main'
+include { icgcArgoRnaSeqAlignmentHISAT2 } from '../alignHISAT2' params(['cleanup': false, *:params]) 
 
-
-process file_smart_diff {
+process diff_bam {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
@@ -66,42 +70,52 @@ process file_smart_diff {
 
   script:
     """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    cat ${output_file} \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
-
-    ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
-
-    diff normalized_output normalized_expected \
-      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
+    diff <(samtools view --no-PG ${output_file} | sort) <(samtools view --no-PG ${expected_file} | sort) \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }
 
 
+
 workflow checker {
   take:
-    input_file
-    expected_output
+    index_base
+    index_parent
+    gtf
+    input_files
+    input_format
+    sample
+    pair_status
+    expected_bam
 
   main:
-    genomeAlignmentHisat2(
-      input_file
+    icgcArgoRnaSeqAlignmentHISAT2(
+        index_base,
+        index_parent,
+        gtf,
+        input_files,
+        input_format,
+        pair_status,
+        sample,
     )
 
-    file_smart_diff(
-      genomeAlignmentHisat2.out.output_file,
-      expected_output
+    diff_bam(
+      icgcArgoRnaSeqAlignmentHISAT2.out.bam,
+      expected_bam
     )
+
 }
 
 
 workflow {
   checker(
-    file(params.input_file),
-    file(params.expected_output)
+    params.index,
+    file(params.index).getParent(),
+    file(params.gtf),
+    params.input_files.collect({it -> file(it)}),
+    params.input_format,
+    params.sample,
+    params.pair_status,
+    file(params.expected_bam),
   )
 }
