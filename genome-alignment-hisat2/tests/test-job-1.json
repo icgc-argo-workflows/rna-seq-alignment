@@ -1,0 +1,15 @@
+{
+    "index": "input/test_genome.index_HISAT2/index",
+    "gtf": "input/test_annotation.gtf",
+    "input_files": [
+        "input/TEST-PRO.donor1.donor1_sample1_id.S01L1.e9ea873df5dffc992be7cd3f8c6ee564.lane.bam"
+    ],
+    "input_format": "bam",
+    "sample": "sample_01_L1",
+    "pair_status": "paired",
+    "publish_dir": "outdir",
+    "container_registry": "ghcr.io",
+    "cpus": 1,
+    "mem": 0.5,
+    "expected_bam": "expected/expected_sample_01_L1_Aligned.out.bam",
+}
