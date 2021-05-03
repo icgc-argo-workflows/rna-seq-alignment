@@ -2,7 +2,7 @@
     "name": "genome-alignment-star",
     "version": "0.1.0",
     "description": "Genome Alignment with STAR",
-    "main": "main.nf",
+    "main": "alignSTAR.nf",
     "deprecated": false,
     "keywords": [
         "bioinformatics",
