@@ -2,7 +2,7 @@
     "name": "genome-alignment-hisat2",
     "version": "0.1.0",
     "description": "Genome Alignment with HISAT2",
-    "main": "main.nf",
+    "main": "alignHISAT2.nf",
     "deprecated": false,
     "keywords": [
         "bioinformatics",
@@ -12,14 +12,14 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment.git"
+        "url": "https://github.com/icgc-argo-workflows/rna-seq-alignment.git"
     },
     "container": {
         "registries": [
             {
                 "registry": "ghcr.io",
                 "type": "docker",
-                "org": "icgc-argo-rna-wg",
+                "org": "icgc-argo-workflows",
                 "default": true
             }
         ]
@@ -33,6 +33,6 @@
         }
     ],
     "license": "MIT",
-    "bugReport": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment/issues",
-    "homepage": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment#readme"
+    "bugReport": "https://github.com/icgc-argo-workflows/rna-seq-alignment/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/rna-seq-alignment#readme"
 }

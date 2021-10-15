@@ -1,6 +1,6 @@
 FROM ratschlab/wf-base-miniconda4.8.3:v1.0.1
 
-LABEL org.opencontainers.image.source https://github.com/icgc-argo-rna-wg/icgc-argo-rna-seq-alignment
+LABEL org.opencontainers.image.source https://github.com/icgc-argo-workflows/icgc-argo-rna-seq-alignment
 LABEL org.opencontainers.image.authors Andre Kahles (andre.kahles@inf.ethz.ch)
 LABEL org.opencontainers.image.title ICGC ARGO RNA-Seq alignment image
 
