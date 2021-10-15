@@ -37,7 +37,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0.1'
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/rna-seq-alignment.genome-alignment-hisat2'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-hisat2'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/

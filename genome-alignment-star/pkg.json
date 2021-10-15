@@ -1,6 +1,6 @@
 {
     "name": "genome-alignment-star",
-    "version": "0.1.0",
+    "version": "0.1.0.1",
     "description": "Genome Alignment with STAR",
     "main": "alignSTAR.nf",
     "deprecated": false,
@@ -12,14 +12,14 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment.git"
+        "url": "https://github.com/icgc-argo-workflows/rna-seq-alignment.git"
     },
     "container": {
         "registries": [
             {
                 "registry": "ghcr.io",
                 "type": "docker",
-                "org": "icgc-argo-rna-wg",
+                "org": "icgc-argo-workflows",
                 "default": true
             }
         ]
@@ -33,6 +33,6 @@
         }
     ],
     "license": "MIT",
-    "bugReport": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment/issues",
-    "homepage": "https://github.com/icgc-argo-rna-wg/rna-seq-alignment#readme"
+    "bugReport": "https://github.com/icgc-argo-workflows/rna-seq-alignment/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/rna-seq-alignment#readme"
 }
