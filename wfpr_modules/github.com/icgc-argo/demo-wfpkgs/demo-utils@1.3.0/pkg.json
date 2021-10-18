@@ -1,0 +1,46 @@
+{
+    "name": "demo-utils",
+    "version": "1.3.0",
+    "description": "Package with helper utilities",
+    "main": "main.nf",
+    "scripts": {
+        "test": "wfpm test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo/demo-wfpkgs.git"
+    },
+    "deprecated": false,
+    "keywords": [
+        "bioinformatics",
+        "utilities",
+        "secondary file",
+        "workdir cleanup"
+    ],
+    "contributors": [
+        {
+            "name": "Junjun Zhang",
+            "email": "junjun.zhang@oicr.on.ca"
+        }
+    ],
+    "license": "AGPL-3.0",
+    "dependencies": [],
+    "container": {
+        "registries": [
+            {
+                "registry": "quay.io",
+                "type": "docker",
+                "org": "icgc-argo",
+                "default": true
+            },
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo",
+                "default": false
+            }
+        ]
+    },
+    "bugReport": "https://github.com/icgc-argo/demo-wfpkgs/issues",
+    "homepage": "https://github.com/icgc-argo/demo-wfpkgs#readme"
+}

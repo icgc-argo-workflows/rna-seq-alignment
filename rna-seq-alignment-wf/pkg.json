@@ -1,0 +1,30 @@
+{
+    "name": "rna-seq-alignment-wf",
+    "version": "0.1.0",
+    "description": "RNA-Seq alignment workflow",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "rna-seq",
+        "alignment",
+        "qc_metrics"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/rna-seq-alignment.git"
+    },
+    "dependencies": [
+        "github.com/icgc-argo/demo-wfpkgs/demo-utils@1.3.0",
+        "github.com/icgc-tcga-pancancer/awesome-wfpkgs1/demo-fastqc@0.2.0"
+    ],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Linda Xiang",
+            "email": "linda.xiang@oicr.on.ca"
+        }
+    ],
+    "license": "MIT",
+    "bugReport": "https://github.com/icgc-argo-workflows/rna-seq-alignment/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/rna-seq-alignment#readme"
+}
