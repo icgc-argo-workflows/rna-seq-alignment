@@ -97,11 +97,9 @@ workflow checker {
   take:
     index
     gtf
+    metadata
     input_files
-    input_format
-    sample
     sjdboverhang
-    pair_status
     expected_bam
     expected_junctions
 
@@ -109,10 +107,8 @@ workflow checker {
     icgcArgoRnaSeqAlignmentSTAR(
         index,
         gtf,
+        metadata,
         input_files,
-        input_format,
-        pair_status,
-        sample,
         sjdboverhang
     )
 
@@ -132,11 +128,9 @@ workflow {
   checker(
     file(params.index),
     file(params.gtf),
+    file(params.metadata),
     params.input_files.collect({it -> file(it)}),
-    params.input_format,
-    params.sample,
     params.sjdboverhang,
-    params.pair_status,
     file(params.expected_bam),
     file(params.expected_junctions)
   )

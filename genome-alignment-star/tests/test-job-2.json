@@ -4,8 +4,8 @@
     "input_files": [
         "input/TEST-PRO.donor1.donor1_sample1_id.S01L2.3112d632dff4edc8deb475274749b622.lane.bam"
     ],
+    "metadata": "input/test-job-2.payload.json",
     "input_format": "bam",
-    "sample": "sample_01_L2",
     "sjdboverhang": 100,
     "pair_status": "paired",
     "publish_dir": "outdir",

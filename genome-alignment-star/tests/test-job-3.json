@@ -5,8 +5,8 @@
         "input/sample_02_L1_1.fastq.gz",
         "input/sample_02_L1_2.fastq.gz"
     ],
+    "metadata": "input/test-job-3.payload.json",
     "input_format": "fastq",
-    "sample": "sample_02_L1",
     "sjdboverhang": 100,
     "pair_status": "paired",
     "publish_dir": "outdir",
