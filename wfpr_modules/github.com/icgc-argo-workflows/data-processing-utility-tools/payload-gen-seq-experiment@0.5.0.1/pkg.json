@@ -1,0 +1,38 @@
+{
+    "name": "payload-gen-seq-experiment",
+    "version": "0.5.0.1",
+    "description": "SONG payload generation for sequencing experiment",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "bioinformatics",
+        "metadata"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/data-processing-utility-tools.git"
+    },
+    "container": {
+        "registries": [
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo-workflows",
+                "default": true
+            }
+        ]
+    },
+    "dependencies": [],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Junjun Zhang"
+        },
+        {
+            "name": "Hillary Elrick"
+        }
+    ],
+    "license": "GNU Affero General Public License v3",
+    "bugReport": "https://github.com/icgc-argo-workflows/data-processing-utility-tools/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/data-processing-utility-tools#readme"
+}

@@ -1,0 +1,37 @@
+{
+    "name": "cleanup-workdir",
+    "version": "1.0.0.1",
+    "description": "Process to cleanup workdir intermediate files",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "workflow",
+        "utility",
+        "temp file"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/data-processing-utility-tools.git"
+    },
+    "container": {
+        "registries": [
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo-workflows",
+                "default": true
+            }
+        ]
+    },
+    "dependencies": [],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Junjun Zhang",
+            "email": "junjun.ca@gmail.com"
+        }
+    ],
+    "license": "GNU Affero General Public License v3",
+    "bugReport": "https://github.com/icgc-argo-workflows/data-processing-utility-tools/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/data-processing-utility-tools#readme"
+}

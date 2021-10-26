@@ -42,16 +42,22 @@
   ],
   "samples": [
     {
+      "sampleId": "SA002",
+      "specimenId": "SP002",
       "submitterSampleId": "donor1_sample2_id",
       "matchedNormalSubmitterSampleId": "sample2_normal",
       "sampleType": "RNA",
       "specimen": {
+        "specimenId": "SP002",
+        "donorId": "DO001",
         "submitterSpecimenId": "donor1_sample2",
         "tumourNormalDesignation": "tumor",
         "specimenTissueSource": "simulated",
         "specimenType": "simulated"
       },
       "donor": {
+        "donorId": "DO001",
+        "studyId": "TEST-PRO",
         "submitterDonorId": "donor1",
         "gender": "male"
       }
