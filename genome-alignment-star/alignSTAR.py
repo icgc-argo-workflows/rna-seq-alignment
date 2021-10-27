@@ -53,9 +53,9 @@ def main():
     ### sample metadata
     parser.add_argument('--sample', dest='sample', type=str,
                         help='Sample name / ID to be processed.', default=None)
-    parser.add_argument('--readgroup', dest='readgroup', type=str,
+    parser.add_argument('--readgroup', dest='readgroup', type=str, nargs='+',
                         help='Readgroup name / ID to be processed.', default=None)
-    parser.add_argument('--pair-status', dest='pair_status', type=str,
+    parser.add_argument('--pair-status', dest='pair_status', type=str, nargs='+',
                         help='Paired-end status of input samples. Choices are: single, paired.', default=None)
     parser.add_argument('--input-format', dest='input_format', type=str,
                         help='Format of read in put: fastq or bam', default=None)
@@ -83,20 +83,29 @@ def main():
         with open(args.metadata, 'r') as jsonFile:
             metadata = json.load(jsonFile)
         
-        ### make sure we get exactly one read group from one sample
-        assert len(metadata['read_groups']) == 1, 'Assertion failed: More than one read group provided in metadata file'
+        ### make sure we get exactly one sample per metadata file
         assert len(metadata['samples']) == 1, 'Assertion failed: More than one sample provided in metadata file'
         
         ### sample ID
         if args.sample is None and 'samples' in metadata:
             args.sample = metadata['samples'][0]['sampleId']
         ### readgroup info
+        ### - we make the assumption that the input files are given for exactly one read group. 
+        ###   That is, for ubam, the file must have only a single read group
+        ### - in case of fastq input, we use the file name without extensions as read group ID
         if 'read_groups' in metadata:
             if args.readgroup is None:
-                args.readgroup = metadata['read_groups'][0]['submitter_read_group_id']
+                args.readgroup = []
+                for rg in metadata['read_groups']:
+                    args.readgroup.append(rg['submitter_read_group_id'])
             ### single/paired
             if args.pair_status is None:
-                args.pair_status = 'paired' if metadata['read_groups'][0]['is_paired_end'] else 'single'
+                args.pair_status = []
+                for rg in metadata['read_groups']:
+                    if rg['is_paired_end']:
+                        args.pair_status.append('paired')
+                    else:
+                        args.pair_status.append('single')
         ### we make the assumption that all input files have the same format
         if args.input_format is None and 'files' in metadata:
             args.input_format = metadata['files'][0]['fileType'].lower()
@@ -120,36 +129,63 @@ def main():
         generate_fastq_from_ubam(args.input_files[0], outdir, mem=args.mem)
         fqr1 = glob.glob(os.path.join(outdir, '*_1.fastq.gz'))
         fqr2 = []
+        for fq in fqr1:
+            _fqr2 = fq[:-10] + '2.fastq.gz'
+            if os.path.exists(_fqr2):
+                fqr2.append(_fqr2)
+            else:
+                fqr2.append(None)
+        rgs_input = [os.path.basename(_)[:-11] for _ in fqr1]
+
+        ### we can not have more than one read group per given ubam file
+        assert len(rgs_input) == 1, 'Error: the number of read groups present in given bam file %s is different from 1' % args.input_files[0]
+        
+        ### make sure that the read group present in the ubam also is given in the metadata
+        assert rgs_input[0] in args.readgroup, 'Error: readgroup provided in input bam (%s) is not present in the list of readgroups from metadata (%s)' % (args.input_files[0], str(args.readgroup))
+        rg_idx = args.readgroup.index(rgs_input[0])
+        args.readgroup = args.readgroup[rg_idx]
+        args.pair_status = args.pair_status[rg_idx]
+        fqr1 = fqr1[rg_idx]
         if args.pair_status == 'paired':
-            for fq in fqr1:
-                fqr2.append(fq[:-10] + '2.fastq.gz')
-                assert os.path.exists(fqr2[-1])
-        rgs_bam = [os.path.basename(_)[:-11] for _ in fqr1]
-        ### make sure that the read group requested in the parameters is present in the bam
-        assert args.readgroup in rgs_bam, 'Error: requested read group (%s) not present in given bam (%s)' % (args.readgroup, args.input_files[0])
+            fqr2 = fqr2[rg_idx]
+            assert fqr2 is not None, 'Error: Status of read group %s given as paired, but only single reads could be extracted from %s.' % (args.readgroup, args.input_files[0])
+                
 
     ### handle fastq input
     elif args.input_format == 'fastq':
-        fqr1 = [args.input_files[0]]
-        fqr2 = []
+        assert len(args.input_files) in [1, 2], 'Error: We expect 1 fastq file in single and 2 fastq files in paired mode. Currently given: %i' % len(args.input_files)
+        if len(args.pair_status) > 1:
+            sys.stderr.write('Warning: Currently %i values are given for pair_status. Only the first one will be considered.\n' % len(args.pair_status))
+        args.pair_status = args.pair_status[0]
+        fqr1 = args.input_files[0]
+        fqr2 = None
         if args.pair_status == 'paired': 
-            fqr2 = [args.input_files[1]]
+            fqr2 = args.input_files[1]
             if len(args.input_files) != 2:
                 sys.exit('Error: Paired-end status was given as %s. But files provided were: %s' % (args.pair_status, str(args.input_files)))
         elif args.pair_status == 'single' and len(args.input_files != 1):
             sys.exit('Error: Paired-end status was given as %s. But files provided were: %s' % (args.pair_status, str(args.input_files)))
+
+        ### read group information is derived from fastq file name
+        ### - we make the assumption that one (two) fastq files are given in single (paired) mode
+        ###   and the read group is derived from the fastq name (by dropping any extensions from the basename)
+        if fqr1.lower().endswith('gz') or fqr1.lower().endswith('bz2'):
+            args.readgroup = '.'.join(os.path.basename(fqr1).split('.')[:-2])
+        else:
+            args.readgroup = '.'.join(os.path.basename(fqr1).split('.')[:-1])
+        if args.pair_status == 'paired' and args.readgroup[-2:] in ['_1', ':1']:
+             args.readgroup =  args.readgroup[:-2]
+
     ### this should not happen
     else:
         sys.exit('Error: The input type needs to be either bam or fastq. Currently given: %s' % args.input_format)
 
     ### figure out correct read command
     read_command = 'cat'
-    for fq in fqr1:
-        if fq.lower().endswith('.gz'):
-            read_command = 'zcat'
-            break
-        if fq.lower().endswith('.bz2'):
-            read_command = 'bzcat'
+    if fqr1.lower().endswith('.gz'):
+        read_command = 'zcat'
+    elif fqr1.lower().endswith('.bz2'):
+        read_command = 'bzcat'
 
     ### assemble STAR command
     cmd = ['STAR',
@@ -158,7 +194,7 @@ def main():
            '--runThreadN', str(args.threads),
            '--sjdbOverhang', str(args.sjdboverhang),
            '--outFileNamePrefix', args.sample + '_' + args.readgroup + '_',
-           '--readFilesIn', ','.join(fqr1), ','.join(fqr2),
+           '--readFilesIn', fqr1, fqr2,
            '--outSAMattrRGline', 'ID:%s\tSM:%s' % (args.readgroup, args.sample),
            '--readFilesCommand', read_command,
            '--twopassMode Basic',
@@ -187,19 +223,8 @@ def main():
     bam = args.sample + '_' + args.readgroup + '_Aligned.out.bam'
     subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
 
-    ### replace original read group line from ubam
-    #if args.input_format == 'bam':
-    #    bam = args.readgroup + '_Aligned.out.bam'
-    #    ### get current header and drop RG info
-    #    subprocess.run(f'samtools view -H {bam} --no-PG | grep -v "@RG" > new_header.sam', shell=True, check=True)
-    #    ### append old read group info 
-    #    for fq in fqr1:
-    #        subprocess.run('samtools view -H %s --no-PG | grep -e @RG | grep %s >> new_header.sam' % (args.input_files[0], os.path.basename(fq)[:-11]), shell=True, check=True)
-    #    ### replace header
-    #    bam_rg = args.sample + '_Aligned.out.rg.bam'
-    #    replace_bam_header(bam, 'new_header.sam', bam_rg, mem=args.mem) 
-    #    ### clean up
-    #    subprocess.run('mv %s %s && rm new_header.sam' % (bam_rg, bam), shell=True, check=True)
+    ### bundle logs into tarball
+    subprocess.run('tar -czf all_logs.tar.gz *.out align.log', shell=True, check=True)
 
 if __name__ == "__main__":
     main()

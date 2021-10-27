@@ -72,7 +72,7 @@ process icgcArgoRnaSeqAlignmentSTAR {
   output:  // output, make update as needed
     path("*_Aligned.out.bam"), emit: bam
     path("*_SJ.out.tab"), emit: junctions
-    path("*_Log*")
+    path("all_logs.tar.gz")
 
   script:
     """
