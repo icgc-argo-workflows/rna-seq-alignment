@@ -224,7 +224,7 @@ def main():
     subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
 
     ### bundle logs into tarball
-    subprocess.run('tar -czf all_logs.tar.gz *.out align.log', shell=True, check=True)
+    subprocess.run('tar -czf %s_%s.all_logs.supplement.tar.gz *.out align.log' % (args.sample, args.readgroup), shell=True, check=True)
 
 if __name__ == "__main__":
     main()
