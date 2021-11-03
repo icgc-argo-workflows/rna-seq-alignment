@@ -55,8 +55,6 @@ def main():
                         help='Sample name / ID to be processed.', default=None)
     parser.add_argument('--readgroup', dest='readgroup', type=str, nargs='+',
                         help='Readgroup name / ID to be processed.', default=None)
-    parser.add_argument('--readgroup-orig', dest='readgroup_orig', type=str, nargs='+',
-                        help='Readgroup name / ID as present in original data.', default=None)
     parser.add_argument('--pair-status', dest='pair_status', type=str, nargs='+',
                         help='Paired-end status of input samples per read_group. Choices are: single, paired.', default=None)
     parser.add_argument('--input-format', dest='input_format', type=str,
@@ -78,9 +76,10 @@ def main():
 
     args = parser.parse_args()
 
-    ### check whether optional read group substitution is correctly used
-    if args.readgroup is not None and args.readgroup_orig is not None:
-        assert len(args.readgroup) == len(args.readgroup_orig), 'Error: Number and order of RGIDs in --readgroup and --readgroup-orig need to match'
+    ### the following two settings we only read from metadata and apply them if appropriate
+    ### we do not allow them to be set via command line
+    meta_readgroup_orig = None
+    meta_fastq_orig = None
 
     ### check whether we are given a metadata file
     ### if a command line parameter is given for a specific setting it 
@@ -102,10 +101,12 @@ def main():
         if 'read_groups' in metadata:
             if args.readgroup is None:
                 args.readgroup = []
-                args.readgroup_orig = []
+                meta_readgroup_orig = []
+                meta_fastq_orig = []
                 for rg in sorted(metadata['read_groups']):
                     args.readgroup.append(rg['submitter_read_group_id'])
-                    args.readgroup_orig.append(rg['read_group_id_in_bam'])
+                    meta_readgroup_orig.append(rg['read_group_id_in_bam'])
+                    meta_fastq_orig.append(rg['file_r1'])
             ### single/paired
             if args.pair_status is None:
                 args.pair_status = []
@@ -160,10 +161,10 @@ def main():
         ### make sure that the read group present in the ubam also is given in the metadata
         if rg_input in args.readgroup:
             rg_idx = args.readgroup.index(rg_input)
-        elif rg_input in args.readgroup_orig:
-            rg_idx = args.readgroup_orig.index(rg_input) 
+        elif meta_readgroup_orig is not None and rg_input in meta_readgroup_orig:
+            rg_idx = meta_readgroup_orig.index(rg_input) 
         else:
-            sys.stderr.write('Error: readgroup provided in input bam (%s) is not present in the list of readgroups from metadata (%s) or in the list of alternative original readgroups form metadata (%s)\n' % (args.input_files[0], str(args.readgroup), str(args.readgroup_orig)))
+            sys.stderr.write('Error: readgroup provided in input bam (%s) is not present in the list of readgroups from metadata (%s) or in the list of alternative original readgroups form metadata (%s)\n' % (args.input_files[0], str(args.readgroup), str(meta_readgroup_orig)))
         args.readgroup = args.readgroup[rg_idx]
         args.pair_status = args.pair_status[rg_idx]
         fqr1 = fqr1[rg_idx]
@@ -171,21 +172,12 @@ def main():
             fqr2 = fqr2[rg_idx]
             assert fqr2 is not None, 'Error: Status of read group %s given as paired, but only single reads could be extracted from %s.' % (args.readgroup, args.input_files[0])
                 
-
     ### handle fastq input
     elif args.input_format == 'fastq':
         assert len(args.input_files) in [1, 2], 'Error: We expect 1 fastq file in single and 2 fastq files in paired mode. Currently given: %i' % len(args.input_files)
         if len(args.pair_status) > 1:
             sys.stderr.write('Warning: Currently %i values are given for --pair-status. Only the first one will be considered.\n' % len(args.pair_status))
         args.pair_status = args.pair_status[0]
-        if args.readgroup is not None:
-            if len(args.readgroup) > 1:
-                sys.stderr.write('Warning: Currently %i values are given for --readgroup. Only the first one will be considered.\n' % len(args.readgroup))
-            args.readgroup = args.readgroup[0]
-        if args.readgroup_orig is not None:
-            if len(args.readgroup_orig):
-                sys.stderr.write('Warning: Currently %i values are given for --readgroup-orig. Only the first one will be considered.\n' % len(args.readgroup_orig))
-            args.readgroup_orig = args.readgroup_orig[0]
         fqr1 = args.input_files[0]
         fqr2 = None
         if args.pair_status == 'paired': 
@@ -205,11 +197,15 @@ def main():
         if args.pair_status == 'paired' and rg_input[-2:] in ['_1', ':1']: 
             rg_input = rg_input[:-2]
 
-        ### if an original read group ID is provided, check whether we can use it to map to the new submitter RGID
-        if args.readgroup_orig is not None and args.readgroup is not None:
-            assert rg_input in args.readgroup_orig, 'Error: read group ID provided via readgroup_orig (%s) is inconsistent with RGID derived from fastq file name (%s).' % (str(args.readgroup_orig), rg_input)
-            rg_idx = args.readgroup_orig.index(rg_input)
+        ### check if we find the fastq file name in the metadata of a given read group, then use this for RGID mapping
+        if meta_fastq_orig is not None and fqr1 in meta_fastq_orig:
+            rg_idx = meta_fastq_orig.index(fqr1)
             args.readgroup = args.readgroup[rg_idx]
+        elif args.readgroup[0] is not None:
+            if len(args.readgroup) > 1:
+                sys.stderr.write('Warning: Currently %i values are given for --readgroup. Only the first one will be considered.\n' % len(args.readgroup))
+            args.readgroup = args.readgroup[0]
+        ### otherwise use read group name derived from file name
         else:
             args.readgroup = rg_input
 
