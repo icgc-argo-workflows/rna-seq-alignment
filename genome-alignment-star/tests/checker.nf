@@ -70,7 +70,7 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view --no-PG ${output_file} | sort) <(samtools view --no-PG ${expected_file} | sort) \
+    diff <(samtools view --no-PG -h ${output_file} | sort) <(samtools view -h --no-PG ${expected_file} | sort) \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }

@@ -19,8 +19,21 @@
     "spike_ins_fasta": "",
     "spike_ins_concentration": ""
   },
-  "read_group_count": 1,
+  "read_group_count": 2,
   "read_groups": [
+    {
+      "submitter_read_group_id": "S02L1",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim01",
+      "is_paired_end": true,
+      "file_r1": "sample_02_L1_1.fastq.gz",
+      "file_r2": "sample_02_L1_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim01"
+    },
     {
       "submitter_read_group_id": "S02L2",
       "read_group_id_in_bam": null,
@@ -59,6 +72,28 @@
     }
   ],
   "files": [
+    {
+      "fileName": "input/sample_02_L1_1.fastq.gz",
+      "fileSize": 17254,
+      "fileMd5sum": "2d03028a77e1f972551fc95e2958f986",
+      "fileType": "FASTQ",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    },
+    {
+      "fileName": "input/sample_02_L1_2.fastq.gz",
+      "fileSize": 17524,
+      "fileMd5sum": "95dd2a3e3830742442e305256e528f45",
+      "fileType": "FASTQ",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    },
     {
       "fileName": "input/sample_02_L2_1.fastq.gz",
       "fileSize": 17346,
