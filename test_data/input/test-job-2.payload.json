@@ -1,0 +1,98 @@
+{
+  "analysisType": {
+    "name": "rna_sequencing_experiment"
+  },
+  "studyId": "TEST-PRO",
+  "experiment": {
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "sequencing_center": "SIM",
+    "platform": "ILLUMINA",
+    "platform_model": "Polyester",
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2021-04-21",
+    "library_isolation_protocol": "",
+    "library_prepation_kit": "",
+    "library_stranded": "First_Stranded",
+    "rin": 9,
+    "dv200": "90%",
+    "spike_ins_included": "",
+    "spike_ins_fasta": "",
+    "spike_ins_concentration": ""
+  },
+  "read_group_count": 2,
+  "read_groups": [
+    {
+      "submitter_read_group_id": "S01L1",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim01",
+      "is_paired_end": true,
+      "file_r1": "sample_01_L1_1.fastq.gz",
+      "file_r2": "sample_01_L1_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim01"
+    },
+    {
+      "submitter_read_group_id": "S01L2",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim01",
+      "is_paired_end": true,
+      "file_r1": "sample_01_L2_1.fastq.gz",
+      "file_r2": "sample_01_L2_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim01"
+    }
+  ],
+  "samples": [
+    {
+      "sampleId": "SA001",
+      "specimenId": "SP001",
+      "submitterSampleId": "donor1_sample1_id",
+      "matchedNormalSubmitterSampleId": "sample1_normal",
+      "sampleType": "RNA",
+      "specimen": {
+        "specimenId": "SP001",
+        "donorId": "DO001",
+        "submitterSpecimenId": "donor1_sample1",
+        "tumourNormalDesignation": "tumor",
+        "specimenTissueSource": "simulated",
+        "specimenType": "simulated"
+      },
+      "donor": {
+        "donorId": "DO001",
+        "studyId": "TEST-PRO",
+        "submitterDonorId": "donor1",
+        "gender": "male"
+      }
+    }
+  ],
+  "files": [
+    {
+      "fileName": "input/TEST-PRO.donor1.donor1_sample1_id.S01L1.e9ea873df5dffc992be7cd3f8c6ee564.lane.bam",
+      "fileSize": 44920,
+      "fileMd5sum": "ab1044dd74426d70eb3615939dd81c13",
+      "fileType": "BAM",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    },
+    {
+      "fileName": "input/TEST-PRO.donor1.donor1_sample1_id.S01L2.3112d632dff4edc8deb475274749b622.lane.bam",
+      "fileSize": 41835,
+      "fileMd5sum": "0c341390db26ad6f433189c7a35fa004",
+      "fileType": "BAM",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    }
+  ]
+}
