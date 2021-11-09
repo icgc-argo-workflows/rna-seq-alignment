@@ -70,7 +70,10 @@ def get_read_group_info(metadata, args):
             read_groups_info['PI'].append(rg.get('insert_size'))
             read_groups_info['BC'].append(rg.get('sample_barcode'))
             read_groups_info['CN'].append(experiment.get('sequencing_center'))
-            read_groups_info['PL'].append(experiment.get('platform'))
+            if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
+                read_groups_info['PL'].append(experiment.get('platform'))
+            else:
+                sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
             read_groups_info['PM'].append(experiment.get('platform_model'))
             read_groups_info['DT'].append(experiment.get('sequencing_date'))
             ### description
@@ -294,6 +297,9 @@ def main():
     ### sort output by coordinate
     bam = args.sample + '_Aligned.out.bam'
     subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
+
+    ### reheader bam file to be compliant with ValidateSamFormat
+    subprocess.run(f'samtools reheader -P -c \'sed -e "s/\(^@PG.*CL:STAR\).*/\\1 (see @CO for more information)/g"\' {bam} > {bam}.reheadered.bam && mv {bam}.reheadered.bam {bam}', shell=True, check=True)
 
     ### bundle logs into tarball
     subprocess.run('tar -czf %s.all_logs.supplement.tar.gz *.out align.log' % (args.sample), shell=True, check=True)
