@@ -51,10 +51,10 @@ params.container = ""
 params.index = "NO_FILE_1/NO_FILE_1"
 params.gtf = "NO_FILE_2"
 params.input_files = ["NO_FILE_3"]
-params.input_format = "ubam"
 params.sample = "sample_01"
 params.pair_status = "paired"
 params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
+params.expected_junctions = "tests/expected/sample_01_novel_splicesites.txt"
 
 include { icgcArgoRnaSeqAlignmentHISAT2 } from '../alignHISAT2' params(['cleanup': false, *:params]) 
 
@@ -70,8 +70,25 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view --no-PG ${output_file} | sort) <(samtools view --no-PG ${expected_file} | sort) \
+    diff <(samtools view --no-PG ${output_file}) <(samtools view --no-PG ${expected_file}) \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
+    """
+}
+
+process diff_junctions {
+  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
+
+  input:
+    path output_file
+    path expected_file
+
+  output:
+    stdout()
+
+  script:
+    """
+    diff <(sort ${output_file}) <(sort ${expected_file}) \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, junction files mismatch." && exit 1 )
     """
 }
 
@@ -82,26 +99,28 @@ workflow checker {
     index_base
     index_parent
     gtf
+    metadata
     input_files
-    input_format
-    sample
-    pair_status
     expected_bam
+    expected_junctions
 
   main:
     icgcArgoRnaSeqAlignmentHISAT2(
         index_base,
         index_parent,
         gtf,
+        metadata,
         input_files,
-        input_format,
-        pair_status,
-        sample,
     )
 
     diff_bam(
       icgcArgoRnaSeqAlignmentHISAT2.out.bam,
       expected_bam
+    )
+
+    diff_junctions(
+      icgcArgoRnaSeqAlignmentHISAT2.out.junctions,
+      expected_junctions
     )
 
 }
@@ -112,10 +131,9 @@ workflow {
     params.index,
     file(params.index).getParent(),
     file(params.gtf),
+    file(params.metadata),
     params.input_files.collect({it -> file(it)}),
-    params.input_format,
-    params.sample,
-    params.pair_status,
     file(params.expected_bam),
+    file(params.expected_junctions)
   )
 }
