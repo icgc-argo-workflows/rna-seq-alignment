@@ -77,8 +77,6 @@ process cram2bam {
     fi
 
     samtools view -T !{reference} -b --threads !{params.cpus} -o ${fname}.bam !{input_cram}
-    samtools sort -o ${fname}.sorted.bam ${fname}.bam 
-    mv ${fname}.sorted.bam ${fname}.bam
     samtools index ${fname}.bam
     '''
 }

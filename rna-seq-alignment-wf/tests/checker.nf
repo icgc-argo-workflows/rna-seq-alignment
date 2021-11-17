@@ -40,61 +40,33 @@ params.container_registry = ""
 params.container_version = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.expected_output = ""
-params.cleanup = false
+params.study_id = ""
+params.analysis_id = ""
+params.ref_genome_fa = ""
+params.ref_genome_gtf = ""
+
+params.analysis_metadata = "NO_FILE"
+params.experiment_info_tsv = "NO_FILE1"
+params.read_group_info_tsv = "NO_FILE2"
+params.file_info_tsv = "NO_FILE3"
+params.extra_info_tsv = "NO_FILE4"
+params.sequencing_files = []
+
 
 include { RnaSeqAlignmentWf } from '../main'
-// include section starts
-// include section ends
-
-
-process file_smart_diff {
-  input:
-    path output_file
-    path expected_file
-
-  output:
-    stdout()
-
-  script:
-    """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    cat ${output_file} \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
-
-    ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
-
-    diff normalized_output normalized_expected \
-      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
-    """
-}
-
-
-workflow checker {
-  take:
-    input_file
-    expected_output
-
-  main:
-    RnaSeqAlignmentWf(
-      input_file
-    )
-
-    file_smart_diff(
-      RnaSeqAlignmentWf.out.output_file,
-      expected_output
-    )
-}
-
 
 workflow {
-  checker(
-    file(params.input_file),
-    file(params.expected_output)
-  )
+  main:
+    RnaSeqAlignmentWf(
+      params.study_id,
+      params.analysis_id,
+      params.ref_genome_fa,
+      params.ref_genome_gtf,
+      params.analysis_metadata,
+      params.experiment_info_tsv,
+      params.read_group_info_tsv,
+      params.file_info_tsv,
+      params.extra_info_tsv,
+      params.sequencing_files
+    )
 }

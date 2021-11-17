@@ -81,18 +81,19 @@ process payloadGenRnaAlignment {
 
   script:
     // add and initialize variables here as needed
+    arg_aligner = aligner ? "-l ${aligner}": ""
+
     """
     main.py \
       -f ${files_to_upload} \
       -a ${seq_experiment_analysis} \
-      -l ${aligner} \
       -t ${analysis_type} \
       -g "${genome_annotation}" \
       -b "${genome_build}" \
       -w "${wf_name}" \
       -r ${workflow.runName} \
       -s ${workflow.sessionId} \
-      -v ${wf_version}
+      -v ${wf_version} ${arg_aligner}
 
     """
 }

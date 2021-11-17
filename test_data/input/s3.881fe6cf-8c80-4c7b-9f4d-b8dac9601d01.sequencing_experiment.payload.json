@@ -1,12 +1,12 @@
 {
   "analysisType": {
-    "name": "rna_sequencing_experiment"
+    "name": "sequencing_experiment"
   },
   "studyId": "TEST-PRO",
   "experiment": {
     "submitter_sequencing_experiment_id": "TEST_EXP",
     "sequencing_center": "SIM",
-    "platform": "Simulation",
+    "platform": "ILLUMINA",
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21",
