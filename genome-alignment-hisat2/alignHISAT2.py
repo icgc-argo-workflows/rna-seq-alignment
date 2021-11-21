@@ -260,7 +260,7 @@ def main():
     assert len(read_group_ids) == len(fqr1), 'Error: Mapping between readgroup IDs (%s) and fastq files (%s) is inconsistent' % (str(read_group_ids), str(fqr1))
     for rg_idx in range(len(read_group_ids)):
         rg_tag = f'_RG_{read_group_ids[rg_idx]}'
-        print(f'aligning to {args.sample}_RG_{read_group_ids[rg_idx]}_Aligned.out.bam')
+        print(f'aligning to {args.sample}.hisat2{rg_tag}_Aligned.out.bam')
         ### assemble HISAT2 command
         cmd = ['hisat2',
                '-t', 
@@ -270,11 +270,11 @@ def main():
                '-1', fqr1[rg_idx],
                '--min-intronlen 20',
                '--max-intronlen 500000', 
-               '--met-file', args.sample + '_RG_' + read_group_ids[rg_idx] +'_metrics.txt',
-               '--summary-file', args.sample + '_RG_' + read_group_ids[rg_idx] +'_summary.txt',
+               '--met-file', args.sample + rg_tag +'_metrics.txt',
+               '--summary-file', args.sample + rg_tag +'_summary.txt',
                '--new-summary',
                '--known-splicesite-infile', args.annotation + '.known_splicesites.txt',
-               '--novel-splicesite-outfile', args.sample + '_RG_' + read_group_ids[rg_idx] + '.novel_splicesites.txt',
+               '--novel-splicesite-outfile', args.sample + rg_tag + '.novel_splicesites.txt',
                '-k 20', # max number of alt alignments
                '--secondary', 
                '-I 50', # min fragment length 
@@ -289,7 +289,7 @@ def main():
             cmd.extend(['--rg', '%s:"%s"' % (k, v[rg_idx])])
 
         ### transform to bam output
-        cmd.extend(['|', 'samtools', 'view', '--no-PG', '-bS', '-o', args.sample + '_RG_' + read_group_ids[rg_idx] + '_Aligned.out.bam', '-'])
+        cmd.extend(['|', 'samtools', 'view', '--no-PG', '-bS', '-o', args.sample + '.hisat2' + rg_tag + '_Aligned.out.bam', '-'])
 
         ### run command
         try:
@@ -300,26 +300,26 @@ def main():
 
     ### merge read group bams to sample level bam
     if len(read_group_ids) > 1:
-        cmd = ['samtools', 'merge', args.sample + '_Aligned.out.bam']
+        cmd = ['samtools', 'merge', args.sample + '.hisat2.Aligned.out.bam']
         for rg_id in read_group_ids:
-            cmd.append(args.sample + '_RG_' + rg_id + '_Aligned.out.bam')
-        cmd.extend(['&&', 'rm ' + args.sample + '_RG_*bam'])
+            cmd.append(args.sample + '.hisat2_RG_' + rg_id + '_Aligned.out.bam')
+        cmd.extend(['&&', 'rm ' + args.sample + '.hisat2_RG_*bam'])
     else:
-        cmd = ['mv', args.sample + '_RG_' + read_group_ids[0] + '_Aligned.out.bam', args.sample + '_Aligned.out.bam']
+        cmd = ['mv', args.sample + '.hisat2_RG_' + read_group_ids[0] + '_Aligned.out.bam', args.sample + '.hisat2.Aligned.out.bam']
     try:
         subprocess.run(' '.join(cmd), shell=True, check=True)
     except Exception as e:
         sys.exit("Error: %s. Merging of read group results failed.\n" % e)
 
     ### sort output by coordinate
-    bam = args.sample + '_Aligned.out.bam'
+    bam = args.sample + '.hisat2.Aligned.out.bam'
     subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
 
     ### collect novel splice sites
-    subprocess.run(f'sort -k1,1 -k2,3n -k4,4 -u {args.sample}_RG_*.novel_splicesites.txt > {args.sample}.novel_splicesites.txt && rm {args.sample}_RG_*.novel_splicesites.txt', shell=True, check=True)
+    subprocess.run(f'sort -k1,1 -k2,3n -k4,4 -u {args.sample}_RG_*.novel_splicesites.txt > {args.sample}.hisat2.novel_splicesites.txt && rm {args.sample}_RG_*.novel_splicesites.txt', shell=True, check=True)
 
     ### bundle logs into tarball
-    subprocess.run(f'tar -czf {args.sample}.all_logs.supplement.tar.gz *metrics.txt *summary.txt align.log', shell=True, check=True)
+    subprocess.run(f'tar -czf {args.sample}.hisat2.all_logs.supplement.tar.gz *metrics.txt *summary.txt align.log', shell=True, check=True)
 
 if __name__ == "__main__":
     main()

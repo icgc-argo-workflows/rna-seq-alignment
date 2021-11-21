@@ -69,9 +69,9 @@ process icgcArgoRnaSeqAlignmentHISAT2 {
     path input_files
 
   output:  // output, make update as needed
-    path("*_Aligned.out.bam"), emit: bam
+    path("*.hisat2.Aligned.out.bam"), emit: bam
     path("*novel_splicesites.txt"), emit: junctions
-    path("*all_logs.supplement.tar.gz"), emit: logs
+    path("*.hisat2.all_logs.supplement.tar.gz"), emit: logs
 
   script:
     """
