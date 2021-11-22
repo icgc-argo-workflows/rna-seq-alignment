@@ -128,6 +128,8 @@ def main():
     parser.add_argument('--threads', dest='threads', type=int,
                         help='Number of threads. [1]', default=1, required=False)
     parser.add_argument('--mem', dest='mem', help="Maximal allocated memory in MB", type=float, default=None)
+    parser.add_argument('-t', '--tempdir', dest='tempdir', type=str, default=None,
+                        help='Directory for temporary files [./{sample}__STARtmp]')
 
     args = parser.parse_args()
 
@@ -292,6 +294,17 @@ def main():
            '--outSAMheaderHD', '@HD VN:1.4',
            '--outSAMmultNmax', '1',
           ]
+    ### optional tempdir
+    if not args.tempdir is None:
+        try:
+            if not os.path.exists(args.tempdir):
+                os.makedirs(args.tempdir)
+        except Exception as e:
+            sys.stderr.write('Error: tempdir %s does not exists and could not be created.\n%s' % (args.tempdir, str(e)))
+            sys.exit(1)
+        cmd.extend(['--outTmpDir', args.tempdir])
+        
+    ### run STAR
     subprocess.run(' '.join(cmd), shell=True, check=True)
 
     ### sort output by coordinate
