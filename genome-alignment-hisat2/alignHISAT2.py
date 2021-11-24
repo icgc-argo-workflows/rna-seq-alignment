@@ -148,6 +148,11 @@ def main():
     #### readgroup info
     (read_groups_info, read_group_ids, read_group_ids_in_bam, pair_status) = get_read_group_info(metadata, args)
 
+    ### get strand information
+    strandedness = None
+    if 'experiment' in metadata and 'library_stranded' in metadata['experiment']:
+        strandedness = metadata['experiment']['library_stranded']
+        
     ### we make the assumption that all input files have the same format
     ### we derive the input format from the input files
     input_format = None
@@ -283,6 +288,20 @@ def main():
         ### handle paired end
         if pair_status == 'paired':
             cmd.extend(['-2', fqr2[rg_idx]]) 
+        ### handle strandedness
+        if not strandedness is None:
+            if strandedness == 'First_Stranded':
+                cmd.append('--rna-strandness')
+                if pair_status == 'paired':
+                    cmd.append('RF')
+                else:
+                    cmd.append('R')
+            elif strandedness == 'Second_Stranded':
+                cmd.append('--rna-strandness')
+                if pair_status == 'paired':
+                    cmd.append('FR')
+                else:
+                    cmd.append('F')
         ### set read group information
         cmd.extend(['--rg-id', read_group_ids[rg_idx]])
         for k,v in read_groups_info.items():
