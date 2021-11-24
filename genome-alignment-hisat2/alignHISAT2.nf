@@ -49,7 +49,7 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.index = "NO_FILE_1/NO_FILE_1" //input/test_genome.index_STAR"
+params.index = "NO_FILE_1/NO_FILE_1" 
 params.gtf = "NO_FILE_2" //input/test_annotation.gtf"
 params.input_files = ["NO_FILE_3"]//input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
 params.pair_status = "paired"
@@ -88,7 +88,7 @@ process icgcArgoRnaSeqAlignmentHISAT2 {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  icgcArgoRnaSeqAlignmentSTAR(
+  icgcArgoRnaSeqAlignmentHISAT2(
     params.index,
     file(params.index).getParent(),
     file(params.gtf),

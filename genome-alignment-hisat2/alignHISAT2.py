@@ -97,7 +97,7 @@ def get_read_group_info(metadata, args):
 
 def main():
     """
-    Python wrapper for calling STAR aligner on various input configurations,
+    Python wrapper for calling HISAT2 aligner on various input configurations,
     assuring that read group information is provided appropriately.
 
     The relevant input can be provided via a metadata file in json format (via --metadata)
@@ -106,7 +106,7 @@ def main():
     can be set.
     """
 
-    parser = argparse.ArgumentParser(description='Tool: STAR aligner')
+    parser = argparse.ArgumentParser(description='Tool: HISAT2 aligner')
     ### sample metadata 
     parser.add_argument('--sample', dest='sample', type=str,
                         help='Sample name / ID to be processed.', default=None)
