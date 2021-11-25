@@ -1,6 +1,6 @@
 {
     "name": "genome-alignment-hisat2",
-    "version": "0.1.0.1",
+    "version": "0.2.0",
     "description": "Genome Alignment with HISAT2",
     "main": "alignHISAT2.nf",
     "deprecated": false,

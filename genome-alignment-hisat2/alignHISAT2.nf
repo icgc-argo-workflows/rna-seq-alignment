@@ -29,7 +29,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.1.0.1'
+version = '0.2.0'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-hisat2'
@@ -49,11 +49,9 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.index = "NO_FILE_1/NO_FILE_1" //input/test_genome.index_STAR"
+params.index = "NO_FILE_1/NO_FILE_1" 
 params.gtf = "NO_FILE_2" //input/test_annotation.gtf"
 params.input_files = ["NO_FILE_3"]//input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
-params.input_format = "ubam"
-params.sample = ""
 params.pair_status = "paired"
 
 process icgcArgoRnaSeqAlignmentHISAT2 {
@@ -67,41 +65,34 @@ process icgcArgoRnaSeqAlignmentHISAT2 {
     val index_base
     path index_parent
     path gtf
+    path metadata
     path input_files
-    val input_format
-    val pair_status
-    val sample
 
   output:  // output, make update as needed
-    path("${sample}_Aligned.out.bam"), emit: bam
-    path("${sample}*splicesites.txt")
-    path("${sample}*metrics.txt")
-    path("${sample}*log")
+    path("*.hisat2.Aligned.out.bam"), emit: bam
+    path("*novel_splicesites.txt"), emit: junctions
+    path("*.hisat2.all_logs.supplement.tar.gz"), emit: logs
 
   script:
     """
     python /tools/alignHISAT2.py \\
-           --sample ${sample} \\
            --index ${index_base} \\
            --annotation ${gtf} \\
+           --metadata ${metadata} \\
            --threads ${params.cpus} \\
-           --pair-status ${pair_status} \\
            --input-files ${input_files} \\
-           --input-format ${input_format} \\
-           --mem ${params.mem * 1000} > ${sample}_align.log 2>&1
+           --mem ${params.mem * 1000} > align.log 2>&1
     """
 }
 
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  icgcArgoRnaSeqAlignmentSTAR(
+  icgcArgoRnaSeqAlignmentHISAT2(
     params.index,
     file(params.index).getParent(),
     file(params.gtf),
+    file(params.metadata),
     params.input_files.collect({it -> file(it)}),
-    params.input_format,
-    params.pair_status,
-    params.sample,
   )
 }
