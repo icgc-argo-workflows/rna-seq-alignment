@@ -1,0 +1,8 @@
+{
+    "aligned_seq": "input/sample_01_L1_Aligned.out.bam",
+    "ref_flat": "http://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/refFlat.txt.gz",
+    "expected_output": "expected/expected.sample_01_L1_Aligned.out.bam.collectrnaseqmetrics.tgz",
+    "publish_dir": "outdir",
+    "cpus": 1,
+    "mem": 0.5
+}

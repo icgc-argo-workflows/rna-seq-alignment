@@ -12,7 +12,6 @@
   ],
   "sjdboverhang": 100,
   "ref_flat": "input/refFlat.hg38.txt.gz",
-  "strand": "FIRST_READ_TRANSCRIPTION_STRAND",
   "ribosomal_interval_list": "input/GRCh38.rRNA.interval_list",
   "publish_dir": "outdir",
   "container_registry": "ghcr.io",

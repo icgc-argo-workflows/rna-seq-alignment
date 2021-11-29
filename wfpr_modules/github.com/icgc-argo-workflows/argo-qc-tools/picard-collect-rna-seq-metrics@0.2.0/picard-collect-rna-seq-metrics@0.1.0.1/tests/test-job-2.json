@@ -1,0 +1,10 @@
+{
+  "aligned_seq": "input/sample_02_L1_Aligned.out.bam",
+  "ref_flat": "input/refFlat.hg38.txt.gz",
+  "expected_output": "expected/expected.sample_02_L1_Aligned.out.bam.collectrnaseqmetrics.tgz",
+  "publish_dir": "outdir",
+  "strand": "FIRST_READ_TRANSCRIPTION_STRAND",
+  "ribosomal_interval_list": "input/GRCh38.rRNA.interval_list",
+  "cpus": 1,
+  "mem": 0.5
+}
