@@ -1,6 +1,6 @@
 {
     "name": "picard-collect-rna-seq-metrics",
-    "version": "0.1.0.1",
+    "version": "0.2.0",
     "description": "Picard tool to produce RNA alignment metrics for a SAM or BAM file",
     "main": "main.nf",
     "deprecated": false,

@@ -160,12 +160,15 @@ def main():
                         help='Input SAM or BAM file.', required=True)
     parser.add_argument('-r', '--ref_flat', dest='ref_flat', type=str, required=True,
                         help='Gene annotations in refFlat form.')
-    parser.add_argument('-s', '--strand', dest='strand', type=str, default='NONE', choices=['FIRST_READ_TRANSCRIPTION_STRAND', 'SECOND_READ_TRANSCRIPTION_STRAND', 'NONE'],
+    parser.add_argument('-s', '--strand', dest='strand', type=str, default='Unstranded', choices=['First_Stranded', 'Second_Stranded', 'Unstranded'],
                         help='For strand-specific library prep.')
     parser.add_argument('-x', '--ignore_seq', dest='ignore_seq', type=str,
                         help='If a read maps to a sequence specified with this option, all the bases in the read are counted as ignored bases. These reads are not counted as.')
     parser.add_argument('-b', '--ribosomal_interval_list', dest='ribosomal_interval_list', type=str,
                         help='Location of rRNA sequences in genome in interval_list format.')
+    parser.add_argument('-t', '--tempdir', dest='tempdir', type=str,
+                        help='Specify directory for temporary files')
+
     args = parser.parse_args()
 
     if not os.path.isfile(args.aligned_seq):
@@ -173,6 +176,14 @@ def main():
 
     if not os.path.isfile(args.ref_flat):
         sys.exit('Error: specified refFalt format gene annotation %s does not exist or is not accessible!' % args.ref_flat)
+
+    if args.strand == 'First_Stranded':
+      strand = 'SECOND_READ_TRANSCRIPTION_STRAND'
+    elif args.strand == 'Second_Stranded':
+      strand = 'FIRST_READ_TRANSCRIPTION_STRAND'
+    elif args.strand == 'Unstranded':
+      strand = 'NONE'
+
 
     jvm_Xmx = f'-Xmx{args.jvm_mem}M'
     # get version info
@@ -190,8 +201,11 @@ def main():
         '--OUTPUT', output_dir+'/rna_metrics.txt',
         '--CHART_OUTPUT', output_dir+'/rna_metrics.pdf',
         '--REF_FLAT', args.ref_flat,
-        '--STRAND_SPECIFICITY', args.strand
+        '--STRAND_SPECIFICITY', strand
     ]
+
+    if args.tempdir:
+      tool_args += ['--TMP_DIR', args.tempdir]
 
     if args.ribosomal_interval_list:
       tool_args += ['--RIBOSOMAL_INTERVALS', args.ribosomal_interval_list]
