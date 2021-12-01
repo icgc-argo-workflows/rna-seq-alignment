@@ -29,7 +29,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.1.0.1'
+version = '0.2.1'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-star'
@@ -52,8 +52,6 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 params.index = "NO_FILE_1" //input/test_genome.index_STAR"
 params.gtf = "NO_FILE_2" //input/test_annotation.gtf"
 params.input_files = ["NO_FILE_3"]//input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
-params.input_format = "ubam"
-params.sample = ""
 params.sjdboverhang = 100
 params.pair_status = "paired"
 
@@ -67,29 +65,25 @@ process icgcArgoRnaSeqAlignmentSTAR {
   input:  
     file index
     file gtf
+    file metadata
     path input_files
-    val input_format
-    val pair_status
-    val sample
     val sjdboverhang
 
   output:  // output, make update as needed
-    path("${sample}_Aligned.out.bam"), emit: bam
-    path("${sample}_SJ.out.tab"), emit: junctions
-    path("${sample}_Log*")
+    path("*_Aligned.out.bam"), emit: bam
+    path("*_SJ.out.tab"), emit: junctions
+    path("*all_logs.supplement.tar.gz"), emit: logs
 
   script:
     """
     python /tools/alignSTAR.py \\
-           --sample ${sample} \\
+           --metadata ${metadata} \\
            --index ${index} \\
            --annotation ${gtf} \\
-           --threads ${params.cpus} \\
-           --sjdbOverhang ${sjdboverhang} \\
-           --pair-status ${pair_status} \\
            --input-files ${input_files} \\
-           --input-format ${input_format} \\
-           --mem ${params.mem * 1000} > ${sample}_align.log 2>&1
+           --sjdbOverhang ${sjdboverhang} \\
+           --threads ${params.cpus} \\
+           --mem ${params.mem * 1000} > align.log 2>&1
     """
 }
 
@@ -99,10 +93,8 @@ workflow {
   icgcArgoRnaSeqAlignmentSTAR(
     file(params.index),
     file(params.gtf),
+    file(params.metadata),
     params.input_files.collect({it -> file(it)}),
-    params.input_format,
-    params.pair_status,
-    params.sample,
     params.sjdboverhang
   )
 }
