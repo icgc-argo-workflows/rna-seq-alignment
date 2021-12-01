@@ -1,48 +1,45 @@
 {
   "study_id": "TCRB-CA",
-  "analysis_id": "",
-  "analysis_metadata": "/home/ubuntu/linda-wd/RNA-metadata/8526933e-f6fc-4015-a386-bb77cb36252d.sequencing_experiment.payload.json",
-  "ref_genome_index_star": "/home/ubuntu/reference/RNA-Seq/STARindex",
-  "ref_genome_index_hisat2": "/home/ubuntu/reference/RNA-Seq/HISAT2index/GRCh38_full_analysis_set_plus_decoy_hla",
-  "ref_genome_gtf": "/home/ubuntu/reference/RNA-Seq/gencode.v38.annotation.gtf",
-  "ref_genome_fa": "/home/ubuntu/reference/GRCh38_hla_decoy_ebv/GRCh38_hla_decoy_ebv.fa",
-  "sequencing_files": [
-    "/home/ubuntu/Texas/data/TCRBOA7-T-RNA.read1.fastq.gz",
-    "/home/ubuntu/Texas/data/TCRBOA7-T-RNA.read2.fastq.gz"
-  ],
+  "analysis_id": "146be53f-caa2-4799-abe5-3fcaa2a799da",
+  "analysis_metadata": "",
+  "ref_genome_index_star": "/nfs-dev-1-vol-qa-1/reference/rna-seq/STARindex",
+  "ref_genome_index_hisat2": "/nfs-dev-1-vol-qa-1/reference/rna-seq/HISAT2index/GRCh38_full_analysis_set_plus_decoy_hla",
+  "ref_genome_gtf": "/nfs-dev-1-vol-qa-1/reference/rna-seq/gencode.v38.annotation.gtf",
+  "ref_genome_fa": "/nfs-dev-1-vol-qa-1/reference/GRCh38_hla_decoy_ebv/GRCh38_hla_decoy_ebv.fa",
+  "sequencing_files": [],
   "sjdboverhang": 100,
-  "ref_flat": "/home/ubuntu/reference/RNA-Seq/GRCh38.refFlat.txt.gz",
-  "ribosomal_interval_list": "/home/ubuntu/reference/RNA-Seq/GRCh38.rRNA.interval_list",
-  "publish_dir": "outdir",
+  "ref_flat": "/nfs-dev-1-vol-qa-1/reference/rna-seq/GRCh38.refFlat.txt.gz",
+  "ribosomal_interval_list": "/nfs-dev-1-vol-qa-1/reference/rna-seq/GRCh38.rRNA.interval_list",
   "container_registry": "ghcr.io",
   "cpus": 1,
   "mem": 4,
-  "tempdir": "/tmp",
+  "tempdir": "/icgc-argo-scratch",
+  "cleanup": true,
   "song_url": "https://song.rdpc-qa.cancercollaboratory.org",
   "score_url": "https://score.rdpc-qa.cancercollaboratory.org",
   "download": {
-    "score_mem": 18,
+    "score_mem": 10,
     "song_mem": 2,
-    "score_cpus": 8,
+    "score_cpus": 4,
     "score_url": "https://submission-score.rdpc-qa.cancercollaboratory.org",
     "song_url": "https://submission-song.rdpc-qa.cancercollaboratory.org",
     "song_cpus": 2
   },
   "seqDataToLaneBam": {
-    "mem": 16,
-    "cpus": 2
+    "mem": 18,
+    "cpus": 4
   },
   "starAligner": {
-    "mem": 16,
-    "cpus": 2    
+    "mem": 64,
+    "cpus": 16    
   },
   "hisat2Aligner": {
-    "mem": 16,
-    "cpus": 2    
+    "mem": 64,
+    "cpus": 16    
   },
   "bamMergeSortMarkdup": {
-    "mem": 16,
-    "cpus": 2
+    "mem": 18,
+    "cpus": 4
   },
   "readGroupUBamQC": {
     "mem": 8,
@@ -50,16 +47,16 @@
   },
   "alignedSeqQC": {
     "mem": 16,
-    "cpus": 2
+    "cpus": 4
   },
   "payloadGen": {
     "mem": 8,
     "cpus": 2
   },
   "upload": {
-    "score_mem": 18,
+    "score_mem": 10,
     "song_mem": 2,
-    "score_cpus": 8,
+    "score_cpus": 4,
     "song_cpus": 2
   }
 }
