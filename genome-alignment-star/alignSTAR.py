@@ -178,7 +178,7 @@ def main():
         sys.exit('Error: specified annotation file %s does not exist or is not accessible!' % args.annotation)
 
     ### handle ubam input
-    outdir = '.'
+    outdir = args.tempdir if args.tempdir else '.'
     if input_format == 'bam':
         ### we iterate over all input files of type bam. we make the assumption that the read group ids 
         ### used between bam files do not overlap
