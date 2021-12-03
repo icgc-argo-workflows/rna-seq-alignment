@@ -58,6 +58,7 @@ params.expected_junctions = "tests/expected/sample_01_novel_splicesites.txt"
 
 include { icgcArgoRnaSeqAlignmentHISAT2 } from '../alignHISAT2' params(['cleanup': false, *:params]) 
 
+// for the diff bam, we need to remove some non-deterministic parts (like merging hashes and tmp filenames)
 process diff_bam {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
@@ -70,7 +71,8 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view --no-PG ${output_file}) <(samtools view --no-PG ${expected_file}) \
+    diff <(samtools view --no-PG -h ${output_file} | sed -e "s/-[12] [0-9a-zA-Z\\/\\.]*//g" | sed -e "s/:hisat2-.*/hisat2/g") \
+         <(samtools view --no-PG -h ${expected_file} | sed -e "s/-[12] [0-9a-zA-Z\\/\\.]*//g" | sed -e "s/:hisat2-.*/hisat2/g") \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }
