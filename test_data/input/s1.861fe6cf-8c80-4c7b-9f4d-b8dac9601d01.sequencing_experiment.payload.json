@@ -10,7 +10,7 @@
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21",
-    "library_stranded": "Unstranded"
+    "library_strandedness": "Unstranded"
   },
   "read_group_count": 2,
   "read_groups": [

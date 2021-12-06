@@ -12,7 +12,7 @@
     "sequencing_date": "2021-04-21",
     "library_isolation_protocol": "",
     "library_prepation_kit": "",
-    "library_stranded": "",
+    "library_strandedness": "",
     "rin": 9,
     "dv200": "90%",
     "spike_ins_included": "",

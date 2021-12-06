@@ -173,7 +173,8 @@ include { bamMergeSortMarkdup as merMkdupStar } from "./wfpr_modules/github.com/
 include { bamMergeSortMarkdup as merMkdupHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.hisat2'])
 include { fastqc } from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/fastqc@0.1.0.1/main.nf" params(readGroupUBamQC_params)
 include { picardCollectRnaSeqMetrics as alignedSeqQcStar;  picardCollectRnaSeqMetrics as alignedSeqQcHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/picard-collect-rna-seq-metrics@0.2.0/main.nf" params(alignedSeqQC_params)
-include { getSecondaryFiles as getSec; parseJsonFile as pJson } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/helper-functions@1.0.2/main.nf'
+include { jsonParser } from "./wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/json-parser@0.1.0/main.nf"
+include { getSecondaryFiles as getSec } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/helper-functions@1.0.2/main.nf'
 include { cleanupWorkdir as cleanup } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/cleanup-workdir@1.0.0.1/main.nf'
 include { payloadGenSeqExperiment as pGenExp } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-seq-experiment@0.5.0.1/main.nf' params(payloadGen_params)
 include { cram2bam as cram2bamStar; cram2bam as cram2bamHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/cram2bam@0.1.0/main.nf'
@@ -274,7 +275,8 @@ workflow RnaSeqAlignmentWf {
     }
 
     // get strand info from metadata
-    strand = pJson(analysis_metadata).experiment.library_stranded
+    jsonParser(analysis_metadata)
+    jsonParser.out.library_strandedness.set{strand}
 
     if (params.star) {
       // run STAR alignment for all reads of a sample

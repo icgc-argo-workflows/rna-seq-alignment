@@ -51,7 +51,7 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 // tool specific parmas go here, add / change as needed
 params.aligned_seq = "NO_FILE1"
 params.ref_flat = "NO_FILE2"
-params.strand = ""
+params.strand = "NO_VALUE"
 params.ignore_seq = "NO_FILE3"
 params.ribosomal_interval_list = "NO_FILE4"
 params.tempdir = "NO_DIR"
@@ -77,7 +77,7 @@ process picardCollectRnaSeqMetrics {
 
   script:
     // add and initialize variables here as needed
-    arg_strand = strand == '' ? "" : " -s ${strand}"
+    arg_strand = strand == 'NO_VALUE' ? "" : " -s ${strand}"
     arg_ignore_seq = ignore_seq.name.startsWith('NO_FILE') ? "" : "-x ${ignore_seq}"
     arg_ribosomal_interval_list = ribosomal_interval_list.name.startsWith('NO_FILE') ? "" : "-b ${ribosomal_interval_list}"
     arg_tempdir = tempdir != 'NO_DIR' ? "-t ${tempdir}" : ""
