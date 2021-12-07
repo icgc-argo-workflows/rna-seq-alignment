@@ -52,7 +52,7 @@ params.index = "NO_FILE_1/NO_FILE_1"
 params.gtf = "NO_FILE_2"
 params.input_files = ["NO_FILE_3"]
 params.sample = "sample_01"
-params.pair_status = "paired"
+params.tempdir = ""
 params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
 params.expected_junctions = "tests/expected/sample_01_novel_splicesites.txt"
 
@@ -102,6 +102,7 @@ workflow checker {
     index_parent
     gtf
     metadata
+    tempdir
     input_files
     expected_bam
     expected_junctions
@@ -112,6 +113,7 @@ workflow checker {
         index_parent,
         gtf,
         metadata,
+        tempdir,
         input_files,
     )
 
@@ -134,6 +136,7 @@ workflow {
     file(params.index).getParent(),
     file(params.gtf),
     file(params.metadata),
+    params.tempdir,
     params.input_files.collect({it -> file(it)}),
     file(params.expected_bam),
     file(params.expected_junctions)
