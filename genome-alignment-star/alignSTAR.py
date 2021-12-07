@@ -296,7 +296,7 @@ def main():
            '--outSAMmultNmax', '1',
           ]
     ### optional tempdir
-    if not args.tempdir is None:
+    if args.tempdir:
         try:
             if not os.path.exists(args.tempdir):
                 os.makedirs(args.tempdir)
