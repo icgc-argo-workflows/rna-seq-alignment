@@ -3,6 +3,7 @@
 
 import os
 import sys
+import re
 import argparse
 import subprocess
 import glob
@@ -65,26 +66,26 @@ def get_read_group_info(metadata, args):
             ### mandatory fields
             read_groups_info['SM'].append(metadata['samples'][0]['sampleId'])
             read_groups_info['LB'].append(rg['library_name'])
-            read_groups_info['PU'].append(rg['platform_unit'])
+            read_groups_info['PU'].append(replace_whitespace(rg['platform_unit']))
             ### optional fields (do not set if 'None')
             if rg.get('insert_size'): read_groups_info['PI'].append(rg.get('insert_size'))
             if rg.get('sample_barcode'): read_groups_info['BC'].append(rg.get('sample_barcode'))
-            if experiment.get('sequencing_center'): read_groups_info['CN'].append(experiment.get('sequencing_center'))
+            if experiment.get('sequencing_center'): read_groups_info['CN'].append(replace_whitespace(experiment.get('sequencing_center')))
             if experiment.get('platform'):
                 if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
                     read_groups_info['PL'].append(experiment.get('platform'))
                 else:
                     sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
-            if experiment.get('platform_model'): read_groups_info['PM'].append(experiment.get('platform_model'))
-            if experiment.get('sequencing_date'): read_groups_info['DT'].append(experiment.get('sequencing_date'))
+            if experiment.get('platform_model'): read_groups_info['PM'].append(replace_whitespace(experiment.get('platform_model')))
+            if experiment.get('sequencing_date'): read_groups_info['DT'].append(replace_whitespace(experiment.get('sequencing_date')))
             ### description
-            description = '_'.join([
-                                        experiment['experimental_strategy'],
-                                        metadata['studyId'],
-                                        metadata['samples'][0]['specimenId'],
-                                        metadata['samples'][0]['donor']['donorId'],
-                                        metadata['samples'][0]['specimen']['specimenType'],
-                                        metadata['samples'][0]['specimen']['tumourNormalDesignation']
+            description = '::'.join([
+                                        replace_whitespace(experiment['experimental_strategy']),
+                                        replace_whitespace(metadata['studyId']),
+                                        replace_whitespace(metadata['samples'][0]['specimenId']),
+                                        replace_whitespace(metadata['samples'][0]['donor']['donorId']),
+                                        replace_whitespace(metadata['samples'][0]['specimen']['specimenType']),
+                                        replace_whitespace(metadata['samples'][0]['specimen']['tumourNormalDesignation'])
                                     ])
             read_groups_info['DS'].append(description)
     else:
@@ -94,6 +95,11 @@ def get_read_group_info(metadata, args):
         pair_status = args.pair_status
 
     return (read_groups_info, read_group_ids, read_group_ids_in_bam, pair_status)
+
+
+def replace_whitespace(s):
+    
+    return re.sub(r'\s+', '_', s)
 
 
 def main():

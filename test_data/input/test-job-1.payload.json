@@ -7,7 +7,7 @@
     "submitter_sequencing_experiment_id": "TEST_EXP",
     "sequencing_center": "SIM",
     "platform": "ILLUMINA",
-    "platform_model": "Polyester",
+    "platform_model": "Polyester Simulation",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21",
     "library_isolation_protocol": "",
