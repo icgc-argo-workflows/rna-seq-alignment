@@ -177,7 +177,7 @@ include { jsonParser } from "./wfpr_modules/github.com/icgc-argo-workflows/data-
 include { getSecondaryFiles as getSec } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/helper-functions@1.0.2/main.nf'
 include { cleanupWorkdir as cleanup } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/cleanup-workdir@1.0.0.1/main.nf'
 include { payloadGenSeqExperiment as pGenExp } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-seq-experiment@0.5.0.1/main.nf' params(payloadGen_params)
-include { cram2bam as cram2bamStar; cram2bam as cram2bamHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/cram2bam@0.1.0/main.nf'
+// include { cram2bam as cram2bamStar; cram2bam as cram2bamHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/cram2bam@0.1.0/main.nf'
 include { payloadGenRnaAlignment as pGenAlnStar;  payloadGenRnaAlignment as pGenAlnHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenAlnStarSj;  payloadGenRnaAlignment as pGenAlnHisat2Sj } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenQcStar; payloadGenRnaAlignment as pGenQcHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
@@ -295,12 +295,12 @@ workflow RnaSeqAlignmentWf {
       pGenAlnStarSj(star.out.junctions.collect(),
         analysis_metadata, 'STAR', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
 
-      // convert cram to bam
-      cram2bamStar(pGenAlnStar.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
-        Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
+      // // convert cram to bam
+      // cram2bamStar(pGenAlnStar.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
+      //   Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
 
       // perform STAR aligned seq QC
-      alignedSeqQcStar(cram2bamStar.out.output_bam, file(params.ref_flat),
+      alignedSeqQcStar(star.out.bam, file(params.ref_flat),
         file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir) 
 
       // prepare song payload for STAR qc metrics
@@ -352,12 +352,12 @@ workflow RnaSeqAlignmentWf {
       pGenAlnHisat2Sj(hisat2.out.junctions.collect(),
         analysis_metadata, 'HiSAT2', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
 
-      // convert cram to bam
-      cram2bamHisat2(pGenAlnHisat2.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
-        Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
+      // // convert cram to bam
+      // cram2bamHisat2(pGenAlnHisat2.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
+      //   Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
 
       // perform HiSAT2 aligned seq QC
-      alignedSeqQcHisat2(cram2bamHisat2.out.output_bam, file(params.ref_flat),
+      alignedSeqQcHisat2(hisat2.out.bam, file(params.ref_flat),
         file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir)  
 
       // prepare song payload for HiSAT2 qc metrics
