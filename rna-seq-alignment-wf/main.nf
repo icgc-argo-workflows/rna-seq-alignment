@@ -330,7 +330,7 @@ workflow RnaSeqAlignmentWf {
       }
 
       starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out, 
-                 cram2bamStar.out, alignedSeqQcStar.out)
+                 alignedSeqQcStar.out)
     } else {
       starOut_ch = Channel.empty()
       starOutFlag_ch = Channel.empty()
@@ -389,7 +389,7 @@ workflow RnaSeqAlignmentWf {
       }
 
       hisat2Out_ch = hisat2.out.bam.concat(hisat2.out.junctions, hisat2.out.logs, merMkdupHisat2.out, 
-                 cram2bamHisat2.out,  alignedSeqQcHisat2.out)      
+                 alignedSeqQcHisat2.out)      
     } else {
       hisat2Out_ch = Channel.empty()
       hisat2OutFlag_ch = Channel.empty()
