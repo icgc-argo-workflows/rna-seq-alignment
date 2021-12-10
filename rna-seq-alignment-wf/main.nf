@@ -280,7 +280,7 @@ workflow RnaSeqAlignmentWf {
 
     if (params.star) {
       // run STAR alignment for all reads of a sample
-      star(file(params.ref_genome_index_star), file(ref_genome_gtf), analysis_metadata, toLaneBam.out.lane_bams.collect(), params.sjdboverhang)  
+      star(file(params.ref_genome_index_star), file(ref_genome_gtf), analysis_metadata, toLaneBam.out.lane_bams.collect(), params.sjdboverhang, starAligner_params.tempdir)  
       
       // collect aligned bam for markdup and convert to cram
       merMkdupStar(star.out.bam.collect(), file(ref_genome_fa + '.gz'),
@@ -338,7 +338,7 @@ workflow RnaSeqAlignmentWf {
 
     if (params.hisat2) {
       // run HISAT2 alignment for all reads of a sample
-      hisat2(params.ref_genome_index_hisat2, file(params.ref_genome_index_hisat2).getParent(), file(ref_genome_gtf), analysis_metadata,
+      hisat2(params.ref_genome_index_hisat2, file(params.ref_genome_index_hisat2).getParent(), file(ref_genome_gtf), analysis_metadata, hisat2Aligner_params.tempdir,
         toLaneBam.out.lane_bams.collect())  
       
       // collect aligned bam for markdup and convert to cram
