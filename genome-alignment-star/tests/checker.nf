@@ -34,7 +34,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.2.1'
+version = '0.2.2'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-star'
@@ -53,7 +53,7 @@ params.gtf = "NO_FILE_2"
 params.input_bam = "NO_FILE_3"
 params.sample = "sample_01"
 params.sjdboverhang = 100
-params.pair_status = "paired"
+params.tempdir = ""
 params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
 
 include { icgcArgoRnaSeqAlignmentSTAR } from '../alignSTAR' params(['cleanup': false, *:params])
@@ -100,6 +100,7 @@ workflow checker {
     metadata
     input_files
     sjdboverhang
+    tempdir
     expected_bam
     expected_junctions
 
@@ -109,7 +110,8 @@ workflow checker {
         gtf,
         metadata,
         input_files,
-        sjdboverhang
+        sjdboverhang,
+        tempdir
     )
 
     diff_bam(
@@ -131,6 +133,7 @@ workflow {
     file(params.metadata),
     params.input_files.collect({it -> file(it)}),
     params.sjdboverhang,
+    params.tempdir,
     file(params.expected_bam),
     file(params.expected_junctions)
   )
