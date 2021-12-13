@@ -34,7 +34,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.2.0'
+version = '0.2.1'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-star'
@@ -70,7 +70,7 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view --no-PG -h ${output_file} | sort) <(samtools view -h --no-PG ${expected_file} | sort) \
+    diff <(samtools view --no-PG -h ${output_file}) <(samtools view -h --no-PG ${expected_file}) \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }
