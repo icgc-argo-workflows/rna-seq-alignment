@@ -66,16 +66,17 @@ def get_read_group_info(metadata, args):
             read_groups_info['SM'].append(metadata['samples'][0]['sampleId'])
             read_groups_info['LB'].append(rg['library_name'])
             read_groups_info['PU'].append(rg['platform_unit'])
-            ### optional fields (will be 'None' if not set)
-            read_groups_info['PI'].append(rg.get('insert_size'))
-            read_groups_info['BC'].append(rg.get('sample_barcode'))
-            read_groups_info['CN'].append(experiment.get('sequencing_center'))
-            if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
-                read_groups_info['PL'].append(experiment.get('platform'))
-            else:
-                sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
-            read_groups_info['PM'].append(experiment.get('platform_model'))
-            read_groups_info['DT'].append(experiment.get('sequencing_date'))
+            ### optional fields (do not set if 'None')
+            if rg.get('insert_size'): read_groups_info['PI'].append(rg.get('insert_size'))
+            if rg.get('sample_barcode'): read_groups_info['BC'].append(rg.get('sample_barcode'))
+            if experiment.get('sequencing_center'): read_groups_info['CN'].append(experiment.get('sequencing_center'))
+            if experiment.get('platform'):
+                if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
+                    read_groups_info['PL'].append(experiment.get('platform'))
+                else:
+                    sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
+            if experiment.get('platform_model'): read_groups_info['PM'].append(experiment.get('platform_model'))
+            if experiment.get('sequencing_date'): read_groups_info['DT'].append(experiment.get('sequencing_date'))
             ### description
             description = '|'.join([
                                         experiment['experimental_strategy'],
@@ -177,7 +178,7 @@ def main():
         sys.exit('Error: specified annotation file %s does not exist or is not accessible!' % args.annotation)
 
     ### handle ubam input
-    outdir = '.'
+    outdir = args.tempdir if args.tempdir else '.'
     if input_format == 'bam':
         ### we iterate over all input files of type bam. we make the assumption that the read group ids 
         ### used between bam files do not overlap
@@ -295,7 +296,7 @@ def main():
            '--outSAMmultNmax', '1',
           ]
     ### optional tempdir
-    if not args.tempdir is None:
+    if args.tempdir:
         try:
             if not os.path.exists(args.tempdir):
                 os.makedirs(args.tempdir)

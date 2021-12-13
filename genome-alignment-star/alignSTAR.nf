@@ -29,7 +29,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.2.1'
+version = '0.2.2'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-star'
@@ -53,7 +53,7 @@ params.index = "NO_FILE_1" //input/test_genome.index_STAR"
 params.gtf = "NO_FILE_2" //input/test_annotation.gtf"
 params.input_files = ["NO_FILE_3"]//input/TEST-PRO.donor1.donor1_sample1_id.sample_01.b22541e45ff72d9a042e877a0531af0b.lane.bam"
 params.sjdboverhang = 100
-params.pair_status = "paired"
+params.tempdir = ""
 
 process icgcArgoRnaSeqAlignmentSTAR {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -68,6 +68,7 @@ process icgcArgoRnaSeqAlignmentSTAR {
     file metadata
     path input_files
     val sjdboverhang
+    val tempdir
 
   output:  // output, make update as needed
     path("*_Aligned.out.bam"), emit: bam
@@ -75,13 +76,14 @@ process icgcArgoRnaSeqAlignmentSTAR {
     path("*all_logs.supplement.tar.gz"), emit: logs
 
   script:
+    def tempdir_arg = tempdir != "" ? "--tempdir ${tempdir}" : ""
     """
     python /tools/alignSTAR.py \\
            --metadata ${metadata} \\
            --index ${index} \\
            --annotation ${gtf} \\
            --input-files ${input_files} \\
-           --sjdbOverhang ${sjdboverhang} \\
+           --sjdbOverhang ${sjdboverhang} ${tempdir_arg}\\
            --threads ${params.cpus} \\
            --mem ${params.mem * 1000} > align.log 2>&1
     """
@@ -95,6 +97,7 @@ workflow {
     file(params.gtf),
     file(params.metadata),
     params.input_files.collect({it -> file(it)}),
-    params.sjdboverhang
+    params.sjdboverhang,
+    params.tempdir
   )
 }
