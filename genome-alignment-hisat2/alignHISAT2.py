@@ -3,6 +3,7 @@
 
 import os
 import sys
+import re
 import argparse
 import subprocess
 import glob
@@ -66,18 +67,19 @@ def get_read_group_info(metadata, args):
             read_groups_info['SM'].append(metadata['samples'][0]['sampleId'])
             read_groups_info['LB'].append(rg['library_name'])
             read_groups_info['PU'].append(rg['platform_unit'])
-            ### optional fields (will be 'None' if not set)
-            read_groups_info['PI'].append(rg.get('insert_size'))
-            read_groups_info['BC'].append(rg.get('sample_barcode'))
-            read_groups_info['CN'].append(experiment.get('sequencing_center'))
-            if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
-                read_groups_info['PL'].append(experiment.get('platform'))
-            else:
-                sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
-            read_groups_info['PM'].append(experiment.get('platform_model'))
-            read_groups_info['DT'].append(experiment.get('sequencing_date'))
+            ### optional fields (do not set if 'None')
+            if rg.get('insert_size'): read_groups_info['PI'].append(rg.get('insert_size'))
+            if rg.get('sample_barcode'): read_groups_info['BC'].append(rg.get('sample_barcode'))
+            if experiment.get('sequencing_center'): read_groups_info['CN'].append(experiment.get('sequencing_center'))
+            if experiment.get('platform'):
+                if experiment.get('platform').upper() in ['CAPILLARY', 'DNBSEQ', 'HELICOS', 'ILLUMINA', 'IONTORRENT', 'LS454', 'ONT', 'PACBIO', 'SOLID']: 
+                    read_groups_info['PL'].append(experiment.get('platform'))
+                else:
+                    sys.stderr.write('Warning: ignored platform: %s - not conform to SAM standard\n' % experiment.get('platform'))
+            if experiment.get('platform_model'): read_groups_info['PM'].append(experiment.get('platform_model'))
+            if experiment.get('sequencing_date'): read_groups_info['DT'].append(experiment.get('sequencing_date'))
             ### description
-            description = '_'.join([
+            description = '|'.join([
                                         experiment['experimental_strategy'],
                                         metadata['studyId'],
                                         metadata['samples'][0]['specimenId'],
@@ -126,6 +128,8 @@ def main():
     parser.add_argument('--threads', dest='threads', type=int,
                         help='Number of threads. [1]', default=1, required=False)
     parser.add_argument('--mem', dest='mem', help="Maximal allocated memory in MB", type=float, default=None)
+    parser.add_argument('-t', '--tempdir', dest='tempdir', type=str, default=None,
+                        help='Directory for temporary files [.]')
 
     args = parser.parse_args()
 
@@ -190,7 +194,7 @@ def main():
         sys.exit("Error: %s. HISAT2 hisat2_extract_splice_sites.py failed.\n" % e)
 
     ### handle ubam input
-    outdir = '.'
+    outdir = args.tempdir if args.tempdir else '.'
     if input_format == 'bam':
         ### we iterate over all input files of type bam. we make the assumption that the read group ids 
         ### used between bam files do not overlap
@@ -302,13 +306,13 @@ def main():
                     cmd.append('FR')
                 else:
                     cmd.append('F')
-        ### set read group information
+        ### set basic read group ID information
         cmd.extend(['--rg-id', read_group_ids[rg_idx]])
-        for k,v in read_groups_info.items():
-            cmd.extend(['--rg', '%s:"%s"' % (k, v[rg_idx])])
+
+        bam = args.sample + '.hisat2' + rg_tag + '_Aligned.out.bam'
 
         ### transform to bam output
-        cmd.extend(['|', 'samtools', 'view', '--no-PG', '-bS', '-o', args.sample + '.hisat2' + rg_tag + '_Aligned.out.bam', '-'])
+        cmd.extend(['|', 'samtools', 'view', '--no-PG', '-bS', '-o', bam, '-'])
 
         ### run command
         try:
@@ -316,6 +320,10 @@ def main():
             subprocess.run(' '.join(cmd), shell=True, check=True)
         except Exception as e:
             sys.exit("Error: %s. HISAT2 failed.\n" % e)
+
+        ### reheader readgroup bam with additional read-group information
+        rg_line = '@RG\tID:%s' % read_group_ids[rg_idx] + '\t' + '\t'.join([':'.join([k, str(v[rg_idx])]) for k, v in read_groups_info.items()]) 
+        subprocess.run(f'samtools reheader -P -c \'sed -e "s/^@RG.*/{rg_line}/g"\' {bam} > {bam}.reheadered.bam && mv {bam}.reheadered.bam {bam}', shell=True, check=True)
 
     ### merge read group bams to sample level bam
     if len(read_group_ids) > 1:

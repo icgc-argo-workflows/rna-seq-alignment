@@ -34,7 +34,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.2.0'
+version = '0.2.1'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-hisat2'
@@ -52,12 +52,13 @@ params.index = "NO_FILE_1/NO_FILE_1"
 params.gtf = "NO_FILE_2"
 params.input_files = ["NO_FILE_3"]
 params.sample = "sample_01"
-params.pair_status = "paired"
+params.tempdir = ""
 params.expected_output = "tests/expected/sample_01_Aligned.out.bam"
 params.expected_junctions = "tests/expected/sample_01_novel_splicesites.txt"
 
 include { icgcArgoRnaSeqAlignmentHISAT2 } from '../alignHISAT2' params(['cleanup': false, *:params]) 
 
+// for the diff bam, we need to remove some non-deterministic parts (like merging hashes and tmp filenames)
 process diff_bam {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
@@ -70,7 +71,8 @@ process diff_bam {
 
   script:
     """
-    diff <(samtools view --no-PG ${output_file}) <(samtools view --no-PG ${expected_file}) \
+    diff <(samtools view --no-PG -h ${output_file} | sed -e "s/-[12] [0-9a-zA-Z\\/\\.]*//g" | sed -e "s/:hisat2-.*/hisat2/g") \
+         <(samtools view --no-PG -h ${expected_file} | sed -e "s/-[12] [0-9a-zA-Z\\/\\.]*//g" | sed -e "s/:hisat2-.*/hisat2/g") \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
     """
 }
@@ -100,6 +102,7 @@ workflow checker {
     index_parent
     gtf
     metadata
+    tempdir
     input_files
     expected_bam
     expected_junctions
@@ -110,6 +113,7 @@ workflow checker {
         index_parent,
         gtf,
         metadata,
+        tempdir,
         input_files,
     )
 
@@ -132,6 +136,7 @@ workflow {
     file(params.index).getParent(),
     file(params.gtf),
     file(params.metadata),
+    params.tempdir,
     params.input_files.collect({it -> file(it)}),
     file(params.expected_bam),
     file(params.expected_junctions)
