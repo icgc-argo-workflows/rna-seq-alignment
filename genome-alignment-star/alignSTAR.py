@@ -7,6 +7,7 @@ import argparse
 import subprocess
 import glob
 import json
+import uuid
 from collections import defaultdict
 
 def replace_bam_header(bam, header, out, mem=None):
@@ -177,8 +178,17 @@ def main():
     if not os.path.exists(args.annotation):
         sys.exit('Error: specified annotation file %s does not exist or is not accessible!' % args.annotation)
 
+    if args.tempdir:
+        try:
+            if not os.path.exists(args.tempdir):
+                os.makedirs(args.tempdir)
+        except Exception as e:
+            sys.stderr.write('Error: tempdir %s does not exists and could not be created.\n%s' % (args.tempdir, str(e)))
+            sys.exit(1)
+        outdir = args.tempdir
+    else:
+        outdir = '.'
     ### handle ubam input
-    outdir = args.tempdir if args.tempdir else '.'
     if input_format == 'bam':
         ### we iterate over all input files of type bam. we make the assumption that the read group ids 
         ### used between bam files do not overlap
@@ -297,13 +307,10 @@ def main():
           ]
     ### optional tempdir
     if args.tempdir:
-        try:
-            if not os.path.exists(args.tempdir):
-                os.makedirs(args.tempdir)
-        except Exception as e:
-            sys.stderr.write('Error: tempdir %s does not exists and could not be created.\n%s' % (args.tempdir, str(e)))
-            sys.exit(1)
-        cmd.extend(['--outTmpDir', args.tempdir])
+        star_tmp = os.path.join(args.tempdir, str(uuid.uuid1()))
+        while os.path.exists(star_tmp):
+            star_tmp = os.path.join(args.tempdir, str(uuid.uuid1()))
+        cmd.extend(['--outTmpDir', star_tmp])
         
     ### run STAR
     subprocess.run(' '.join(cmd), shell=True, check=True)

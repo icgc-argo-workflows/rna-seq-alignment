@@ -1,6 +1,6 @@
 {
     "name": "genome-alignment-star",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Genome Alignment with STAR",
     "main": "alignSTAR.nf",
     "deprecated": false,
