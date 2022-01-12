@@ -294,13 +294,13 @@ def main():
             cmd.extend(['-2', fqr2[rg_idx]]) 
         ### handle strandedness
         if not strandedness is None:
-            if strandedness == 'First_Stranded':
+            if strandedness == 'FIRST_READ_ANTISENSE_STRAND':
                 cmd.append('--rna-strandness')
                 if pair_status == 'paired':
                     cmd.append('RF')
                 else:
                     cmd.append('R')
-            elif strandedness == 'Second_Stranded':
+            elif strandedness == 'FIRST_READ_SENSE_STRAND':
                 cmd.append('--rna-strandness')
                 if pair_status == 'paired':
                     cmd.append('FR')
