@@ -154,8 +154,8 @@ def main():
 
     ### get strand information
     strandedness = None
-    if 'experiment' in metadata and 'library_stranded' in metadata['experiment']:
-        strandedness = metadata['experiment']['library_stranded']
+    if 'experiment' in metadata and 'library_strandedness' in metadata['experiment']:
+        strandedness = metadata['experiment']['library_strandedness']
         
     ### we make the assumption that all input files have the same format
     ### we derive the input format from the input files
