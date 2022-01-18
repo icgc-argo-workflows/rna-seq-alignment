@@ -64,7 +64,7 @@ params.star = true
 params.hisat2 = true
 params.lane_qc = true
 
-params.tempdir = "NO_DIR"
+params.tempdir = ""
 
 params.song_url = ""
 params.score_url = ""
@@ -105,7 +105,7 @@ seqDataToLaneBam_params = [
 starAligner_params = [
     'cpus': params.cpus,
     'mem': params.mem,
-    'tempdir': params.tempdir ?: 'NO_DIR',
+    'tempdir': params.tempdir ?: '',
     'publish_dir': params.publish_dir,
     *:(params.starAligner ?: [:])
 ]
@@ -113,7 +113,7 @@ starAligner_params = [
 hisat2Aligner_params = [
     'cpus': params.cpus,
     'mem': params.mem,
-    'tempdir': params.tempdir ?: 'NO_DIR',
+    'tempdir': params.tempdir ?: '',
     'publish_dir': params.publish_dir,
     *:(params.hisat2Aligner ?: [:])
 ]
@@ -168,16 +168,15 @@ upload_params = [
 include { SongScoreDownload as dnld } from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-download@2.6.2/main.nf' params(download_params)
 include { seqDataToLaneBam as toLaneBam } from "./modules/raw.githubusercontent.com/icgc-argo-workflows/dna-seq-processing-tools/seq-data-to-lane-bam.0.3.3.0/tools/seq-data-to-lane-bam/seq-data-to-lane-bam.nf" params(seqDataToLaneBam_params)
 include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.3/alignSTAR.nf" params(starAligner_params)
-include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.1/alignHISAT2.nf" params(hisat2Aligner_params)
+include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.2/alignHISAT2.nf" params(hisat2Aligner_params)
 include { bamMergeSortMarkdup as merMkdupStar } from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.star'])
 include { bamMergeSortMarkdup as merMkdupHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.hisat2'])
 include { fastqc } from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/fastqc@0.1.0.1/main.nf" params(readGroupUBamQC_params)
-include { picardCollectRnaSeqMetrics as alignedSeqQcStar;  picardCollectRnaSeqMetrics as alignedSeqQcHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/picard-collect-rna-seq-metrics@0.2.0/main.nf" params(alignedSeqQC_params)
-include { jsonParser } from "./wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/json-parser@0.1.0/main.nf"
+include { picardCollectRnaSeqMetrics as alignedSeqQcStar;  picardCollectRnaSeqMetrics as alignedSeqQcHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/picard-collect-rna-seq-metrics@0.3.0/main.nf" params(alignedSeqQC_params)
+include { jsonParser } from "./wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/json-parser@0.2.0/main.nf"
 include { getSecondaryFiles as getSec } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/helper-functions@1.0.2/main.nf'
 include { cleanupWorkdir as cleanup } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/cleanup-workdir@1.0.0.1/main.nf'
 include { payloadGenSeqExperiment as pGenExp } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-seq-experiment@0.5.0.1/main.nf' params(payloadGen_params)
-// include { cram2bam as cram2bamStar; cram2bam as cram2bamHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/cram2bam@0.1.0/main.nf'
 include { payloadGenRnaAlignment as pGenAlnStar;  payloadGenRnaAlignment as pGenAlnHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenAlnStarSj;  payloadGenRnaAlignment as pGenAlnHisat2Sj } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenQcStar; payloadGenRnaAlignment as pGenQcHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.1/main.nf' params(payloadGen_params)
@@ -295,10 +294,6 @@ workflow RnaSeqAlignmentWf {
       pGenAlnStarSj(star.out.junctions.collect(),
         analysis_metadata, 'STAR', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
 
-      // // convert cram to bam
-      // cram2bamStar(pGenAlnStar.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
-      //   Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
-
       // perform STAR aligned seq QC
       alignedSeqQcStar(star.out.bam, file(params.ref_flat),
         file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir) 
@@ -353,10 +348,6 @@ workflow RnaSeqAlignmentWf {
       // generate payload for splice junctions (analysis type: splice_junctions)
       pGenAlnHisat2Sj(hisat2.out.junctions.collect(),
         analysis_metadata, 'HiSAT2', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
-
-      // // convert cram to bam
-      // cram2bamHisat2(pGenAlnHisat2.out.cram.flatten().first(), file(ref_genome_fa + '.gz'), 
-      //   Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect())
 
       // perform HiSAT2 aligned seq QC
       alignedSeqQcHisat2(hisat2.out.bam, file(params.ref_flat),

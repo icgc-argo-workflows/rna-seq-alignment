@@ -18,7 +18,5 @@
   "container_registry": "ghcr.io",
   "cpus": 1,
   "mem": 4,
-  "lane_qc": false,
-  "expected_bam": "expected/expected_sample_01_L1_Aligned.out.bam",
-  "expected_junctions": "expected/expected_sample_01_L1_SJ.out.tab"
+  "lane_qc": false
 }

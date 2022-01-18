@@ -17,7 +17,5 @@
   "container_registry": "ghcr.io",
   "cpus": 1,
   "mem": 2,
-  "cleanup": false,
-  "expected_bam": "expected/expected_sample_01_L1_Aligned.out.bam",
-  "expected_junctions": "expected/expected_sample_01_L1_SJ.out.tab"
+  "cleanup": false
 }

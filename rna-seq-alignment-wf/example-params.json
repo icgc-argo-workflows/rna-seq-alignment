@@ -30,12 +30,12 @@
     "cpus": 4
   },
   "starAligner": {
-    "mem": 64,
-    "cpus": 16    
+    "mem": 80,
+    "cpus": 12    
   },
   "hisat2Aligner": {
-    "mem": 64,
-    "cpus": 16    
+    "mem": 80,
+    "cpus": 12    
   },
   "bamMergeSortMarkdup": {
     "mem": 18,
