@@ -1,0 +1,102 @@
+{
+  "analysisType": {
+    "name": "sequencing_experiment"
+  },
+  "studyId": "TEST-PRO",
+  "experiment": {
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "sequencing_center": "SIM",
+    "platform": "ILLUMINA",
+    "platform_model": "Polyester",
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2021-04-21",
+    "library_strandedness": "FIRST_READ_SENSE_STRAND"
+  },
+  "read_group_count": 2,
+  "read_groups": [
+    {
+      "submitter_read_group_id": "S02L1",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim02",
+      "is_paired_end": true,
+      "file_r1": "sample_02_L1_1.fastq.gz",
+      "file_r2": "sample_02_L1_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim02"
+    },
+    {
+      "submitter_read_group_id": "S02L2",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim02",
+      "is_paired_end": true,
+      "file_r1": "sample_02_L2.bam",
+      "file_r2": "sample_02_L2.bam",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim02"
+    }
+  ],
+  "samples": [
+    {
+      "sampleId": "SA002",
+      "specimenId": "SP002",
+      "submitterSampleId": "donor1_sample2_id",
+      "matchedNormalSubmitterSampleId": "sample2_normal",
+      "sampleType": "RNA",
+      "specimen": {
+        "specimenId": "SP002",
+        "donorId": "DO001",
+        "submitterSpecimenId": "donor1_sample2",
+        "tumourNormalDesignation": "tumor",
+        "specimenTissueSource": "simulated",
+        "specimenType": "simulated"
+      },
+      "donor": {
+        "donorId": "DO001",
+        "studyId": "TEST-PRO",
+        "submitterDonorId": "donor1",
+        "gender": "male"
+      }
+    }
+  ],
+  "files": [
+    {
+      "fileName": "sample_02_L1_1.fastq.gz",
+      "fileSize": 512,
+      "fileMd5sum": "2d03028a77e1f972551fc95e2958f986",
+      "fileType": "FASTQ",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    },
+    {
+      "fileName": "sample_02_L1_2.fastq.gz",
+      "fileSize": 512,
+      "fileMd5sum": "95dd2a3e3830742442e305256e528f45",
+      "fileType": "FASTQ",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    },
+    {
+      "fileName": "sample_02_L2.bam",
+      "fileSize": 42219,
+      "fileMd5sum": "1db28d3864fbc5030a6d400fe29a111a",
+      "fileType": "BAM",
+      "fileAccess": "controlled",
+      "dataType": "Submitted Reads",
+      "info": {
+        "data_category": "Sequencing Reads"
+      }
+    }
+  ]
+}
