@@ -312,13 +312,11 @@ workflow RnaSeqAlignmentWf {
       // upload files and metadata to song/score
       if (!local_mode) {
         upAlnStar(study_id, pGenAlnStar.out.payload, pGenAlnStar.out.cram.collect(), '')
-        //upAlnStarSj(study_id, pGenAlnStarSj.out.payload, pGenAlnStarSj.out.splice_junctions.collect(), '')
+        upAlnStarSj(study_id, pGenAlnStarSj.out.payload, pGenAlnStarSj.out.splice_junctions.collect(), '')
         upQcStar(study_id, pGenQcStar.out.payload, pGenQcStar.out.qc_metrics.collect(), '')
         upSuppStar(study_id, pGenSuppStar.out.payload, pGenSuppStar.out.supplement.collect(), '')
-        starOutFlag_ch = upAlnStar.out.analysis_id.concat( 
-                      upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
-        // starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
-        //                      upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
+        starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
+                             upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
       } else {
         starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
                              pGenQcStar.out.payload, pGenSuppStar.out.payload)
@@ -367,13 +365,11 @@ workflow RnaSeqAlignmentWf {
       // upload files and metadata to song/score
       if (!local_mode) {
           upAlnHisat2(study_id, pGenAlnHisat2.out.payload, pGenAlnHisat2.out.cram.collect(), '')
-          //upAlnHisat2Sj(study_id, pGenAlnHisat2Sj.out.payload, pGenAlnHisat2Sj.out.splice_junctions.collect(), '')
+          upAlnHisat2Sj(study_id, pGenAlnHisat2Sj.out.payload, pGenAlnHisat2Sj.out.splice_junctions.collect(), '')
           upQcHisat2(study_id, pGenQcHisat2.out.payload, pGenQcHisat2.out.qc_metrics.collect(), '')
           upSuppHisat2(study_id, pGenSuppHisat2.out.payload, pGenSuppHisat2.out.supplement.collect(), '')
-          hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(
+          hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(upAlnHisat2Sj.out.analysis_id, 
                              upQcHisat2.out.analysis_id, upSuppHisat2.out.analysis_id)
-          // hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(upAlnHisat2Sj.out.analysis_id, 
-          //                    upQcHisat2.out.analysis_id, upSuppHisat2.out.analysis_id)
       } else {
         hisat2OutFlag_ch = pGenAlnHisat2.out.payload.concat(pGenAlnHisat2Sj.out.payload, 
                              pGenQcHisat2.out.payload, pGenSuppHisat2.out.payload)
