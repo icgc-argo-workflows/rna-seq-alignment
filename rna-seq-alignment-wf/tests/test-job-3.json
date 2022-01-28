@@ -1,0 +1,21 @@
+{
+  "study_id": "TEST-PRO",
+  "analysis_metadata": "input/s2.87a9f48c-8b79-4f7e-a580-e661d3b2b007.sequencing_experiment.payload.json",
+  "ref_genome_index_star": "input/test_genome.index_STAR",
+  "ref_genome_index_hisat2": "input/test_genome.index_HISAT2/index",
+  "ref_genome_gtf": "input/test_annotation.gtf",
+  "ref_genome_fa": "input/test_genome.fa",
+  "sequencing_files": [
+      "input/sample_02_L1_1.fastq.gz",
+      "input/sample_02_L1_2.fastq.gz",
+      "input/sample_02_L2.bam"
+  ],
+  "sjdboverhang": 100,
+  "ref_flat": "input/refFlat.hg38.txt.gz",
+  "ribosomal_interval_list": "input/GRCh38.rRNA.interval_list",
+  "publish_dir": "outdir",
+  "container_registry": "ghcr.io",
+  "cpus": 1,
+  "mem": 2,
+  "cleanup": false
+}

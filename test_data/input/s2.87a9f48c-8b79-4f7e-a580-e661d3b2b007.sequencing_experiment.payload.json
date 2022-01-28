@@ -6,10 +6,11 @@
   "experiment": {
     "submitter_sequencing_experiment_id": "TEST_EXP",
     "sequencing_center": "SIM",
-    "platform": "Simulation",
+    "platform": "ILLUMINA",
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
-    "sequencing_date": "2021-04-21"
+    "sequencing_date": "2021-04-21",
+    "library_strandedness": "Second_Stranded"
   },
   "read_group_count": 2,
   "read_groups": [
@@ -31,8 +32,8 @@
       "read_group_id_in_bam": null,
       "platform_unit": "sim02",
       "is_paired_end": true,
-      "file_r1": "sample_02_L2_1.fastq.gz",
-      "file_r2": "sample_02_L2_2.fastq.gz",
+      "file_r1": "sample_02_L2.bam",
+      "file_r2": "sample_02_L2.bam",
       "read_length_r1": 100,
       "read_length_r2": 100,
       "insert_size": 250,
@@ -42,16 +43,22 @@
   ],
   "samples": [
     {
+      "sampleId": "SA002",
+      "specimenId": "SP002",
       "submitterSampleId": "donor1_sample2_id",
       "matchedNormalSubmitterSampleId": "sample2_normal",
       "sampleType": "RNA",
       "specimen": {
+        "specimenId": "SP002",
+        "donorId": "DO001",
         "submitterSpecimenId": "donor1_sample2",
         "tumourNormalDesignation": "tumor",
         "specimenTissueSource": "simulated",
         "specimenType": "simulated"
       },
       "donor": {
+        "donorId": "DO001",
+        "studyId": "TEST-PRO",
         "submitterDonorId": "donor1",
         "gender": "male"
       }
@@ -81,21 +88,10 @@
       }
     },
     {
-      "fileName": "sample_02_L2_1.fastq.gz",
-      "fileSize": 512,
-      "fileMd5sum": "184b6f3177a43753d5dfa1e77ae246e5",
-      "fileType": "FASTQ",
-      "fileAccess": "controlled",
-      "dataType": "Submitted Reads",
-      "info": {
-        "data_category": "Sequencing Reads"
-      }
-    },
-    {
-      "fileName": "sample_02_L2_2.fastq.gz",
-      "fileSize": 512,
-      "fileMd5sum": "718144324440536f81e44fd1c6c2eede",
-      "fileType": "FASTQ",
+      "fileName": "sample_02_L2.bam",
+      "fileSize": 42219,
+      "fileMd5sum": "1db28d3864fbc5030a6d400fe29a111a",
+      "fileType": "BAM",
       "fileAccess": "controlled",
       "dataType": "Submitted Reads",
       "info": {

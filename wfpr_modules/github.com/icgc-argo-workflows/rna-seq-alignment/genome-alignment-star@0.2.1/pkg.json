@@ -1,0 +1,38 @@
+{
+    "name": "genome-alignment-star",
+    "version": "0.2.1",
+    "description": "Genome Alignment with STAR",
+    "main": "alignSTAR.nf",
+    "deprecated": false,
+    "keywords": [
+        "bioinformatics",
+        "rna-seq",
+        "alignment",
+        "star"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/rna-seq-alignment.git"
+    },
+    "container": {
+        "registries": [
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo-workflows",
+                "default": true
+            }
+        ]
+    },
+    "dependencies": [],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Andre Kahles",
+            "email": "andre.kahles@inf.ethz.ch"
+        }
+    ],
+    "license": "MIT",
+    "bugReport": "https://github.com/icgc-argo-workflows/rna-seq-alignment/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/rna-seq-alignment#readme"
+}

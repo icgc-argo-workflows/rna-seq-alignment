@@ -1,0 +1,42 @@
+{
+    "name": "bam-merge-sort-markdup",
+    "version": "0.2.0.1",
+    "description": "Merge multiple lane-level aligned BAMs, Mark duplicated reads and Sort reads by genomic coordinates",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "seq",
+        "merge",
+        "markduplicate",
+        "sort"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/dna-seq-processing-tools.git"
+    },
+    "container": {
+        "registries": [
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo-workflows",
+                "default": true
+            }
+        ]
+    },
+    "dependencies": [
+        "github.com/icgc-argo/data-processing-utility-tools/helper-functions@1.0.1"
+    ],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Junjun Zhang"
+        },
+        {
+            "name": "Linda Xiang"
+        }
+    ],
+    "license": "GNU Affero General Public License v3",
+    "bugReport": "https://github.com/icgc-argo-workflows/dna-seq-processing-tools/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/dna-seq-processing-tools#readme"
+}

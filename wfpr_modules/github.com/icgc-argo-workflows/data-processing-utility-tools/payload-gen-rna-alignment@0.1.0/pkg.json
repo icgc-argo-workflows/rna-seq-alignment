@@ -1,0 +1,37 @@
+{
+    "name": "payload-gen-rna-alignment",
+    "version": "0.1.0",
+    "description": "payload-gen-rna-alignment",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "payload",
+        "rna-seq",
+        "alignment"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo-workflows/data-processing-utility-tools.git"
+    },
+    "container": {
+        "registries": [
+            {
+                "registry": "ghcr.io",
+                "type": "docker",
+                "org": "icgc-argo-workflows",
+                "default": true
+            }
+        ]
+    },
+    "dependencies": [],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Linda Xiang",
+            "email": "linda.xiang@oicr.on.ca"
+        }
+    ],
+    "license": "GNU Affero General Public License v3",
+    "bugReport": "https://github.com/icgc-argo-workflows/data-processing-utility-tools/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/data-processing-utility-tools#readme"
+}

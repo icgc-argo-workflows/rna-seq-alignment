@@ -1,0 +1,30 @@
+{
+    "name": "song-score-upload",
+    "version": "2.7.0",
+    "description": "SONG/SCORE upload",
+    "main": "main.nf",
+    "deprecated": false,
+    "keywords": [
+        "bioinformatics",
+        "data",
+        "metadata",
+        "upload"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icgc-argo/nextflow-data-processing-utility-tools.git"
+    },
+    "dependencies": [],
+    "devDependencies": [],
+    "contributors": [
+        {
+            "name": "Alex Lepsa"
+        },
+        {
+            "name": "Junjun Zhang"
+        }
+    ],
+    "license": "Apache License 2.0",
+    "bugReport": "https://github.com/icgc-argo/nextflow-data-processing-utility-tools/issues",
+    "homepage": "https://github.com/icgc-argo/nextflow-data-processing-utility-tools#readme"
+}

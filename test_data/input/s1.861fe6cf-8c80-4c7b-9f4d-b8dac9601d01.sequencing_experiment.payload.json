@@ -6,10 +6,11 @@
   "experiment": {
     "submitter_sequencing_experiment_id": "TEST_EXP",
     "sequencing_center": "SIM",
-    "platform": "Simulation",
+    "platform": "ILLUMINA",
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
-    "sequencing_date": "2021-04-21"
+    "sequencing_date": "2021-04-21",
+    "library_strandedness": "Unstranded"
   },
   "read_group_count": 2,
   "read_groups": [
@@ -42,16 +43,22 @@
   ],
   "samples": [
     {
+      "sampleId": "SA001",
+      "specimenId": "SP001",
       "submitterSampleId": "donor1_sample1_id",
       "matchedNormalSubmitterSampleId": "sample1_normal",
       "sampleType": "RNA",
       "specimen": {
+        "specimenId": "SP001",
+        "donorId": "DO001",
         "submitterSpecimenId": "donor1_sample1",
         "tumourNormalDesignation": "tumor",
         "specimenTissueSource": "simulated",
         "specimenType": "simulated"
       },
       "donor": {
+        "donorId": "DO001",
+        "studyId": "TEST-PRO",
         "submitterDonorId": "donor1",
         "gender": "male"
       }
