@@ -11,6 +11,6 @@
     "container_registry": "ghcr.io",
     "cpus": 1,
     "mem": 0.5,
-    "expected_bam": "expected/expected_sample_01_L1_Aligned.out.bam",
-    "expected_junctions": "expected/expected_sample_01_L1_SJ.out.tab"
+    "expected_bam": "expected/STAR/expected_sample_01_L1_Aligned.out.bam",
+    "expected_junctions": "expected/STAR/expected_sample_01_L1_SJ.out.tab"
 }
