@@ -14,15 +14,15 @@ def generate_fastq_from_ubam(ubam, outdir, pair_status, mem=None):
 
     ubam_base = os.path.basename(ubam)
     ### collect read groups from bam
-    rgs = subprocess.run(f'samtools view -H {ubam} | grep -e "^@RG" | cut -f 2 | cut -f 2 -d ":"', shell=True, check=True, capture_output=True).stdout.decode('utf-8').strip().split('\n')
+    rgs = subprocess.run(f'samtools view -H {ubam} | grep -e "^@RG" | cut -f 2 | sed -e "s/^ID://g"', shell=True, check=True, capture_output=True).stdout.decode('utf-8').strip().split('\n')
 
     ### convert bam to fastq
     for rg in rgs:
         try:
             if pair_status == 'paired':
-                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -F 256 -r {rg} | samtools fastq -0 /dev/null -1 {outdir}/{rg}_1.fastq.gz -2 {outdir}/{rg}_2.fastq.gz -s /dev/null', shell=True, check=True)
+                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -h -F 256 -r {rg} | samtools fastq -0 /dev/null -1 {outdir}/{rg}_1.fastq.gz -2 {outdir}/{rg}_2.fastq.gz -s /dev/null', shell=True, check=True)
             else:
-                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -F 256 -r {rg} | samtools fastq -0 /dev/null | gzip > {outdir}/{rg}_1.fastq.gz', shell=True, check=True)
+                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -h -F 256 -r {rg} | samtools fastq -0 /dev/null | gzip > {outdir}/{rg}_1.fastq.gz', shell=True, check=True)
         except Exception as e:
             sys.exit("Error: %s. samtools fastq failed: %s\n" % (e, ubam))
 
