@@ -24,21 +24,21 @@ def replace_bam_header(bam, header, out, mem=None):
         sys.exit("Error: %s. ReplaceSamHeader failed: %s\n" % (e, bam))
 
 
-def generate_fastq_from_ubam(ubam, outdir, mem=None):
+def generate_fastq_from_ubam(ubam, outdir, pair_status, mem=None):
+
+    ubam_base = os.path.basename(ubam)
+    ### collect read groups from bam
+    rgs = subprocess.run(f'samtools view -H {ubam} | grep -e "^@RG" | cut -f 2 | sed -e "s/^ID://g"', shell=True, check=True, capture_output=True).stdout.decode('utf-8').strip().split('\n')
 
     ### convert bam to fastq
-    ### In SamToFastq the default setting for --INCLUDE_NON_PRIMARY_ALIGNMENTS is false. So we will exclude secondary hits.
-    ### Further, we will output one fastq file per given read group, but we will only process the read group specified in 
-    ### the given metadata. 
-    jvm_Xmx = "-Xmx%iM" % int(mem) if mem else ""
-    try:
-        cmd = [
-                'java', jvm_Xmx, '-Dpicard.useLegacyParser=false', '-jar', '/tools/picard.jar', 'SamToFastq', '-I', ubam,
-                '--OUTPUT_PER_RG', 'true', '--RG_TAG', 'ID', '--COMPRESS_OUTPUTS_PER_RG', 'true', '--OUTPUT_DIR', outdir
-              ]
-        subprocess.run(cmd, check=True)
-    except Exception as e:
-        sys.exit("Error: %s. SamToFastq failed: %s\n" % (e, ubam))
+    for rg in rgs:
+        try:
+            if pair_status == 'paired':
+                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -h -F 256 -r {rg} | samtools fastq -0 /dev/null -1 {outdir}/{rg}_1.fastq.gz -2 {outdir}/{rg}_2.fastq.gz -s /dev/null', shell=True, check=True)
+            else:
+                subprocess.run(f'samtools collate -u -O {ubam} | samtools view -h -F 256 -r {rg} | samtools fastq -0 /dev/null | gzip > {outdir}/{rg}_1.fastq.gz', shell=True, check=True)
+        except Exception as e:
+            sys.exit("Error: %s. samtools fastq failed: %s\n" % (e, ubam))
 
 
 def get_read_group_info(metadata, args):
@@ -199,7 +199,7 @@ def main():
         ### we iterate over all input files of type bam. we make the assumption that the read group ids 
         ### used between bam files do not overlap
         for fname in args.input_files:
-            generate_fastq_from_ubam(fname, outdir, mem=args.mem)
+            generate_fastq_from_ubam(fname, outdir, pair_status, mem=args.mem)
         fqr1 = glob.glob(os.path.join(outdir, '*_1.fastq.gz'))
         fqr2 = []
         for fq in fqr1:
