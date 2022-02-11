@@ -167,8 +167,8 @@ upload_params = [
 
 include { SongScoreDownload as dnld } from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-download@2.6.2/main.nf' params(download_params)
 include { seqDataToLaneBam as toLaneBam } from "./modules/raw.githubusercontent.com/icgc-argo-workflows/dna-seq-processing-tools/seq-data-to-lane-bam.0.3.3.0/tools/seq-data-to-lane-bam/seq-data-to-lane-bam.nf" params(seqDataToLaneBam_params)
-include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.3/alignSTAR.nf" params(starAligner_params)
-include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.2/alignHISAT2.nf" params(hisat2Aligner_params)
+include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.4/alignSTAR.nf" params(starAligner_params)
+include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.3/alignHISAT2.nf" params(hisat2Aligner_params)
 include { bamMergeSortMarkdup as merMkdupStar } from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.star'])
 include { bamMergeSortMarkdup as merMkdupHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.hisat2'])
 include { fastqc } from "./wfpr_modules/github.com/icgc-argo-workflows/argo-qc-tools/fastqc@0.1.0.1/main.nf" params(readGroupUBamQC_params)

@@ -16,8 +16,8 @@
     "dependencies": [
         "github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-download@2.6.2",
         "github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0",
-        "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.2",
-        "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.3",
+        "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.3",
+        "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.4",
         "github.com/icgc-argo-workflows/argo-qc-tools/fastqc@0.1.0.1",
         "github.com/icgc-argo-workflows/argo-qc-tools/picard-collect-rna-seq-metrics@0.3.0",
         "github.com/icgc-argo-workflows/data-processing-utility-tools/cleanup-workdir@1.0.0.1",
