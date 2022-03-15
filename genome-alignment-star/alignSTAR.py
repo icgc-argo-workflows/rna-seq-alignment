@@ -289,7 +289,6 @@ def main():
            '--limitSjdbInsertNsj', '2000000',
            '--outSAMtype BAM Unsorted',
            '--outSAMheaderHD', '@HD VN:1.4',
-           '--outSAMmultNmax', '1',
           ]
     ### optional tempdir
     if args.tempdir:
