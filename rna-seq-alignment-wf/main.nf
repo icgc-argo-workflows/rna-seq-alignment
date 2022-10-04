@@ -27,7 +27,7 @@
 
 nextflow.enable.dsl = 2
 name = 'rna-seq-alignment'
-version = '0.1.1'
+version = '0.2.0'
 
 // universal params go here, change default value as needed
 params.container = ""
