@@ -17,5 +17,7 @@
   "publish_dir": "outdir",
   "container_registry": "ghcr.io",
   "cpus": 1,
-  "mem": 4
+  "mem": 4,
+  "lane_qc": true,
+  "aln_qc": true
 }

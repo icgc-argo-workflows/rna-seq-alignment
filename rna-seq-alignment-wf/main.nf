@@ -62,7 +62,8 @@ params.max_retries = 5  // set to 0 will disable retry
 params.first_retry_wait_time = 1  // in seconds
 params.star = true
 params.hisat2 = true
-params.lane_qc = true
+params.lane_qc = false
+params.aln_qc = false
 
 params.tempdir = ""
 
@@ -294,36 +295,57 @@ workflow RnaSeqAlignmentWf {
       pGenAlnStarSj(star.out.junctions.collect(),
         analysis_metadata, 'STAR', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
 
-      // perform STAR aligned seq QC
-      alignedSeqQcStar(star.out.bam, file(params.ref_flat),
-        file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir) 
-
-      // prepare song payload for STAR qc metrics
-      pGenQcStar(alignedSeqQcStar.out.qc_tar.concat(
-        merMkdupStar.out.duplicates_metrics).collect(),
-        analysis_metadata, 'STAR', 'qc_metrics', 
-        params.genome_annotation, params.genome_build, name, version)
-
       // prepare song payload for STAR supplement
       pGenSuppStar(star.out.logs.collect(),
         analysis_metadata, 'STAR', 'supplement', 
         params.genome_annotation, params.genome_build, name, version)
 
+      if (params.aln_qc) {
+        // perform STAR aligned seq QC
+        alignedSeqQcStar(star.out.bam, file(params.ref_flat),
+          file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir) 
+
+        // prepare song payload for STAR qc metrics
+        pGenQcStar(alignedSeqQcStar.out.qc_tar.concat(
+          merMkdupStar.out.duplicates_metrics).collect(),
+          analysis_metadata, 'STAR', 'qc_metrics', 
+          params.genome_annotation, params.genome_build, name, version)
+
+        // upload file and metadata to song/score
+        if (!local_mode) {
+          upQcStar(study_id, pGenQcStar.out.payload, pGenQcStar.out.qc_metrics.collect(), '')
+        }
+      }
+
       // upload files and metadata to song/score
       if (!local_mode) {
         upAlnStar(study_id, pGenAlnStar.out.payload, pGenAlnStar.out.cram.collect(), '')
-        upAlnStarSj(study_id, pGenAlnStarSj.out.payload, pGenAlnStarSj.out.splice_junctions.collect(), '')
-        upQcStar(study_id, pGenQcStar.out.payload, pGenQcStar.out.qc_metrics.collect(), '')
+        upAlnStarSj(study_id, pGenAlnStarSj.out.payload, pGenAlnStarSj.out.splice_junctions.collect(), '')        
         upSuppStar(study_id, pGenSuppStar.out.payload, pGenSuppStar.out.supplement.collect(), '')
-        starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
-                             upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
+        if (params.aln_qc) {
+          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
+                            upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
+        } else {
+          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
+                            upSuppStar.out.analysis_id)
+        }
+        
       } else {
-        starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
-                             pGenQcStar.out.payload, pGenSuppStar.out.payload)
+        if (params.aln_qc) {
+          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
+                            pGenQcStar.out.payload, pGenSuppStar.out.payload)
+        } else {
+          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
+                            pGenSuppStar.out.payload)
+        }
       }
-
-      starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out, 
+      if (params.aln_qc) {
+        starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out, 
                  alignedSeqQcStar.out)
+      } else {
+        starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out)
+      }
+      
     } else {
       starOut_ch = Channel.empty()
       starOutFlag_ch = Channel.empty()
@@ -347,36 +369,57 @@ workflow RnaSeqAlignmentWf {
       pGenAlnHisat2Sj(hisat2.out.junctions.collect(),
         analysis_metadata, 'HiSAT2', 'splice_junctions', params.genome_annotation, params.genome_build, name, version)
 
-      // perform HiSAT2 aligned seq QC
-      alignedSeqQcHisat2(hisat2.out.bam, file(params.ref_flat),
-        file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir)  
-
-      // prepare song payload for HiSAT2 qc metrics
-      pGenQcHisat2(alignedSeqQcHisat2.out.qc_tar.concat(
-        merMkdupHisat2.out.duplicates_metrics).collect(),
-        analysis_metadata, 'HiSAT2', 'qc_metrics', 
-        params.genome_annotation, params.genome_build, name, version)
-
       // prepare song payload for HiSAT2 supplement
       pGenSuppHisat2(hisat2.out.logs.collect(),
         analysis_metadata, 'HiSAT2', 'supplement', 
         params.genome_annotation, params.genome_build, name, version)
 
+      if (params.aln_qc) {
+        // perform HiSAT2 aligned seq QC
+        alignedSeqQcHisat2(hisat2.out.bam, file(params.ref_flat),
+          file(params.ignore_seq), file(params.ribosomal_interval_list), strand, alignedSeqQC_params.tempdir)  
+
+        // prepare song payload for HiSAT2 qc metrics
+        pGenQcHisat2(alignedSeqQcHisat2.out.qc_tar.concat(
+          merMkdupHisat2.out.duplicates_metrics).collect(),
+          analysis_metadata, 'HiSAT2', 'qc_metrics', 
+          params.genome_annotation, params.genome_build, name, version)
+
+        // upload file and metadata to song/score
+        if (!local_mode) {
+          upQcHisat2(study_id, pGenQcHisat2.out.payload, pGenQcHisat2.out.qc_metrics.collect(), '')
+        }
+      }
+
       // upload files and metadata to song/score
       if (!local_mode) {
           upAlnHisat2(study_id, pGenAlnHisat2.out.payload, pGenAlnHisat2.out.cram.collect(), '')
           upAlnHisat2Sj(study_id, pGenAlnHisat2Sj.out.payload, pGenAlnHisat2Sj.out.splice_junctions.collect(), '')
-          upQcHisat2(study_id, pGenQcHisat2.out.payload, pGenQcHisat2.out.qc_metrics.collect(), '')
           upSuppHisat2(study_id, pGenSuppHisat2.out.payload, pGenSuppHisat2.out.supplement.collect(), '')
-          hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(upAlnHisat2Sj.out.analysis_id, 
-                             upQcHisat2.out.analysis_id, upSuppHisat2.out.analysis_id)
+          if (params.aln_qc) {
+            hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(upAlnHisat2Sj.out.analysis_id, 
+                            upQcHisat2.out.analysis_id, upSuppHisat2.out.analysis_id)
+          } else {
+            hisat2OutFlag_ch = upAlnHisat2.out.analysis_id.concat(upAlnHisat2Sj.out.analysis_id, 
+                            upSuppHisat2.out.analysis_id)
+          }
+          
       } else {
-        hisat2OutFlag_ch = pGenAlnHisat2.out.payload.concat(pGenAlnHisat2Sj.out.payload, 
-                             pGenQcHisat2.out.payload, pGenSuppHisat2.out.payload)
+          if (params.aln_qc) {
+            hisat2OutFlag_ch = pGenAlnHisat2.out.payload.concat(pGenAlnHisat2Sj.out.payload, 
+                            pGenQcHisat2.out.payload, pGenSuppHisat2.out.payload)
+          } else {
+            hisat2OutFlag_ch = pGenAlnHisat2.out.payload.concat(pGenAlnHisat2Sj.out.payload, 
+                            pGenSuppHisat2.out.payload)
+          }
       }
-
-      hisat2Out_ch = hisat2.out.bam.concat(hisat2.out.junctions, hisat2.out.logs, merMkdupHisat2.out, 
-                 alignedSeqQcHisat2.out)      
+      
+      if (params.aln_qc) {
+        hisat2Out_ch = hisat2.out.bam.concat(hisat2.out.junctions, hisat2.out.logs, merMkdupHisat2.out, 
+                 alignedSeqQcHisat2.out) 
+      } else {
+        hisat2Out_ch = hisat2.out.bam.concat(hisat2.out.junctions, hisat2.out.logs, merMkdupHisat2.out) 
+      }     
     } else {
       hisat2Out_ch = Channel.empty()
       hisat2OutFlag_ch = Channel.empty()
