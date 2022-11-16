@@ -75,6 +75,23 @@ process diff_bam {
     """
 }
 
+process diff_bam_tx {
+  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
+
+  input:
+    path output_file
+    path expected_file
+
+  output:
+    stdout()
+
+  script:
+    """
+    diff <(samtools view --no-PG -h ${output_file}) <(samtools view -h --no-PG ${expected_file}) \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, bam files mismatch." && exit 1 )
+    """
+}
+
 process diff_junctions {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
@@ -102,6 +119,7 @@ workflow checker {
     sjdboverhang
     tempdir
     expected_bam
+    expected_bam_tx
     expected_junctions
 
   main:
@@ -117,6 +135,11 @@ workflow checker {
     diff_bam(
       icgcArgoRnaSeqAlignmentSTAR.out.bam,
       expected_bam
+    )
+
+    diff_bam_tx(
+      icgcArgoRnaSeqAlignmentSTAR.out.bam_tx,
+      expected_bam_tx
     )
 
     diff_junctions(
@@ -135,6 +158,7 @@ workflow {
     params.sjdboverhang,
     params.tempdir,
     file(params.expected_bam),
+    file(params.expected_bam_tx),
     file(params.expected_junctions)
   )
 }
