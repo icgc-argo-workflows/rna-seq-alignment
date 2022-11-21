@@ -23,6 +23,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: 3.10
+        architecture: "x64"
+      env:
+        AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
 
     - name: Extract package name and version from branch name
       id: get_pkg_info
@@ -84,6 +87,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: 3.10
+        architecture: "x64"
+      env:
+        AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
 
     - name: Install dependencies
       run: |
