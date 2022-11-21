@@ -150,7 +150,7 @@ def get_files_info(file_to_upload, date_str, seq_experiment_analysis_dict, align
     submitter_rg_id = None
     if re.match(r'^genome.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
       file_type = 'genome_aln'
-    elif re.match(r'^transcriptome.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
+    elif re.match(r'.+?_Aligned\.toTranscriptome\.out\.bam$', file_to_upload): 
       file_type = 'transcriptome_aln'
     elif re.match(r'^chimeric.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
       file_type = 'chimeric_aln'
@@ -282,8 +282,8 @@ def main():
                         help="Input analysis for sequencing experiment", type=str)
     parser.add_argument("-t", "--analysis_type", dest="analysis_type", required=True, help="Specify analysis_type")
     parser.add_argument("-l", "--aligner", dest="aligner", default=None, help="Provide RNA-Seq aligner if files_to_upload are generated from alignment results. Default=None")
-    parser.add_argument("-g", "--genome_annotation", dest="genome_annotation", default="GENCODE v38", help="RNA-Seq alignment genome annotation")
-    parser.add_argument("-b", "--genome_build", dest="genome_build", default="GRCh38_hla_decoy_ebv", help="RNA-Seq alignment genome build")
+    parser.add_argument("-g", "--genome_annotation", dest="genome_annotation", default="GENCODE v40", help="RNA-Seq alignment genome annotation")
+    parser.add_argument("-b", "--genome_build", dest="genome_build", default="GRCh38_Verily_v1", help="RNA-Seq alignment genome build")
     parser.add_argument("-w", "--wf_name", dest="wf_name", required=True, help="Workflow name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", required=True, help="Workflow version")
     parser.add_argument("-r", "--wf_run", dest="wf_run", required=True, help="Workflow run ID")

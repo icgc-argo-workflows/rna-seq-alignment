@@ -289,6 +289,7 @@ def main():
            '--limitSjdbInsertNsj', '2000000',
            '--outSAMtype BAM Unsorted',
            '--outSAMheaderHD', '@HD VN:1.4',
+           '--quantMode', 'TranscriptomeSAM',
           ]
     ### optional tempdir
     if args.tempdir:
@@ -300,15 +301,17 @@ def main():
     ### run STAR
     subprocess.run(' '.join(cmd), shell=True, check=True)
 
-    ### sort output by coordinate
-    bam = args.sample + '_Aligned.out.bam'
-    subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
+    bams = [args.sample + '_Aligned.out.bam', args.sample + '_Aligned.toTranscriptome.out.bam']
 
-    ### reheader bam file to be compliant with ValidateSamFormat
-    subprocess.run(f'samtools reheader -P -c \'sed -e "s/\(^@PG.*CL:STAR\).*/\\1 (see @CO for more information)/g"\' {bam} > {bam}.reheadered.bam && mv {bam}.reheadered.bam {bam}', shell=True, check=True)
+    for bam in bams:
+        ### sort output by coordinate
+        subprocess.run(f'samtools sort -o {bam}.sorted {bam} && mv {bam}.sorted {bam}', shell=True, check=True)
 
-    ### bundle logs into tarball
-    subprocess.run('tar -czf %s.all_logs.supplement.tar.gz *.out align.log' % (args.sample), shell=True, check=True)
+        ### reheader bam file to be compliant with ValidateSamFormat
+        subprocess.run(f'samtools reheader -P -c \'sed -e "s/\(^@PG.*CL:STAR\).*/\\1 (see @CO for more information)/g"\' {bam} > {bam}.reheadered.bam && mv {bam}.reheadered.bam {bam}', shell=True, check=True)
+
+        ### bundle logs into tarball
+        subprocess.run('tar -czf %s.all_logs.supplement.tar.gz *.out align.log' % (args.sample), shell=True, check=True)
 
 if __name__ == "__main__":
     main()

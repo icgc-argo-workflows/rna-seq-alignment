@@ -168,7 +168,7 @@ upload_params = [
 
 include { SongScoreDownload as dnld } from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-download@2.6.2/main.nf' params(download_params)
 include { seqDataToLaneBam as toLaneBam } from "./modules/raw.githubusercontent.com/icgc-argo-workflows/dna-seq-processing-tools/seq-data-to-lane-bam.0.3.3.0/tools/seq-data-to-lane-bam/seq-data-to-lane-bam.nf" params(seqDataToLaneBam_params)
-include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.5/alignSTAR.nf" params(starAligner_params)
+include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.6/alignSTAR.nf" params(starAligner_params)
 include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.3/alignHISAT2.nf" params(hisat2Aligner_params)
 include { bamMergeSortMarkdup as merMkdupStar } from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.star'])
 include { bamMergeSortMarkdup as merMkdupHisat2} from "./wfpr_modules/github.com/icgc-argo-workflows/dna-seq-processing-tools/bam-merge-sort-markdup@0.2.0.1/main.nf" params([*:bamMergeSortMarkdup_params, 'aligned_basename': 'genome.merged.hisat2'])
@@ -178,12 +178,14 @@ include { jsonParser } from "./wfpr_modules/github.com/icgc-argo-workflows/data-
 include { getSecondaryFiles as getSec } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/helper-functions@1.0.2/main.nf'
 include { cleanupWorkdir as cleanup } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/cleanup-workdir@1.0.0.1/main.nf'
 include { payloadGenSeqExperiment as pGenExp } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-seq-experiment@0.5.0.1/main.nf' params(payloadGen_params)
-include { payloadGenRnaAlignment as pGenAlnStar;  payloadGenRnaAlignment as pGenAlnHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.3/main.nf' params(payloadGen_params)
-include { payloadGenRnaAlignment as pGenAlnStarSj;  payloadGenRnaAlignment as pGenAlnHisat2Sj } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.3/main.nf' params(payloadGen_params)
-include { payloadGenRnaAlignment as pGenQcStar; payloadGenRnaAlignment as pGenQcHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.3/main.nf' params(payloadGen_params)
-include { payloadGenRnaAlignment as pGenSuppStar; payloadGenRnaAlignment as pGenSuppHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.3/main.nf' params(payloadGen_params)
-include { payloadGenRnaAlignment as pGenQcLane } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.1.3/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenAlnStar;  payloadGenRnaAlignment as pGenAlnHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenAlnTxStar } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenAlnStarSj;  payloadGenRnaAlignment as pGenAlnHisat2Sj } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenQcStar; payloadGenRnaAlignment as pGenQcHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenSuppStar; payloadGenRnaAlignment as pGenSuppHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
+include { payloadGenRnaAlignment as pGenQcLane } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
 include { SongScoreUpload as upAlnStar; SongScoreUpload as upAlnHisat2} from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0/main.nf' params(upload_params)
+include { SongScoreUpload as upAlnTxStar } from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0/main.nf' params(upload_params)
 include { SongScoreUpload as upAlnStarSj; SongScoreUpload as upAlnHisat2Sj} from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0/main.nf' params(upload_params)
 include { SongScoreUpload as upQcStar; SongScoreUpload as upQcHisat2} from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0/main.nf' params(upload_params)
 include { SongScoreUpload as upSuppStar; SongScoreUpload as upSuppHisat2} from './wfpr_modules/github.com/icgc-argo/nextflow-data-processing-utility-tools/song-score-upload@2.7.0/main.nf' params(upload_params)
@@ -287,8 +289,12 @@ workflow RnaSeqAlignmentWf {
         Channel.fromPath(getSec(ref_genome_fa + '.gz', ['fai', 'gzi']), checkIfExists: true).collect(),
         bamMergeSortMarkdup_params.tempdir)
       
-      // generate payload for STAR aligned seq (analysis type: sequencing_alignment)
+      // generate payload for STAR genomic aligned seq (analysis type: sequencing_alignment)
       pGenAlnStar(merMkdupStar.out.merged_seq.concat(merMkdupStar.out.merged_seq_idx).collect(),
+        analysis_metadata, 'STAR', 'sequencing_alignment', params.genome_annotation, params.genome_build, name, version)
+
+      // generate payload for STAR transcriptome aligned seq (analysis type: sequencing_alignment)
+      pGenAlnTxStar(star.out.bam_tx.collect(),
         analysis_metadata, 'STAR', 'sequencing_alignment', params.genome_annotation, params.genome_build, name, version)
 
       // generate payload for STAR splice junctions (analysis type: splice_junctions)
@@ -320,30 +326,31 @@ workflow RnaSeqAlignmentWf {
       // upload files and metadata to song/score
       if (!local_mode) {
         upAlnStar(study_id, pGenAlnStar.out.payload, pGenAlnStar.out.cram.collect(), '')
+        upAlnTxStar(study_id, pGenAlnTxStar.out.payload, pGenAlnTxStar.out.bam.collect(), '')
         upAlnStarSj(study_id, pGenAlnStarSj.out.payload, pGenAlnStarSj.out.splice_junctions.collect(), '')        
         upSuppStar(study_id, pGenSuppStar.out.payload, pGenSuppStar.out.supplement.collect(), '')
         if (params.aln_qc) {
-          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
+          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnTxStar.out.analysis_id, upAlnStarSj.out.analysis_id, 
                             upQcStar.out.analysis_id, upSuppStar.out.analysis_id)
         } else {
-          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnStarSj.out.analysis_id, 
+          starOutFlag_ch = upAlnStar.out.analysis_id.concat(upAlnTxStar.out.analysis_id, upAlnStarSj.out.analysis_id, 
                             upSuppStar.out.analysis_id)
         }
         
       } else {
         if (params.aln_qc) {
-          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
+          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnTxStar.out.payload, pGenAlnStarSj.out.payload, 
                             pGenQcStar.out.payload, pGenSuppStar.out.payload)
         } else {
-          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnStarSj.out.payload, 
+          starOutFlag_ch = pGenAlnStar.out.payload.concat(pGenAlnTxStar.out.payload, pGenAlnStarSj.out.payload, 
                             pGenSuppStar.out.payload)
         }
       }
       if (params.aln_qc) {
-        starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out, 
+        starOut_ch = star.out.bam.concat(star.out.bam_tx, star.out.junctions, star.out.logs, merMkdupStar.out, 
                  alignedSeqQcStar.out)
       } else {
-        starOut_ch = star.out.bam.concat(star.out.junctions, star.out.logs, merMkdupStar.out)
+        starOut_ch = star.out.bam.concat(star.out.bam_tx, star.out.junctions, star.out.logs, merMkdupStar.out)
       }
       
     } else {
