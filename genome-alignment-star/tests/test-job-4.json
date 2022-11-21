@@ -15,5 +15,6 @@
     "cpus": 1,
     "mem": 0.5,
     "expected_bam": "expected/STAR/expected_sample_02_Aligned.out.bam",
+    "expected_bam_tx": "expected/STAR/expected_sample_02_Aligned.toTranscriptome.out.bam",
     "expected_junctions": "expected/STAR/expected_sample_02_SJ.out.tab"
 }

@@ -29,7 +29,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.2.5'
+version = '0.2.6'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-alignment.genome-alignment-star'
@@ -72,6 +72,7 @@ process icgcArgoRnaSeqAlignmentSTAR {
 
   output:  // output, make update as needed
     path("*_Aligned.out.bam"), emit: bam
+    path("*_Aligned.toTranscriptome.out.bam"), emit: bam_tx
     path("*_SJ.out.tab"), emit: junctions
     path("*all_logs.supplement.tar.gz"), emit: logs
 
