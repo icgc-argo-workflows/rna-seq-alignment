@@ -19,10 +19,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.6
+        python-version: 3.11
+        architecture: "x64"
+      env:
+        AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
 
     - name: Extract package name and version from branch name
       id: get_pkg_info
@@ -80,10 +83,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.6
+        python-version: 3.11
+        architecture: "x64"
+      env:
+        AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
 
     - name: Install dependencies
       run: |
