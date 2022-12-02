@@ -35,9 +35,6 @@ version = '0.2.1'
 
 // universal params
 params.publish_dir = ""
-params.container = ""
-params.container_registry = ""
-params.container_version = ""
 
 // tool specific parmas go here, add / change as needed
 params.study_id = ""
