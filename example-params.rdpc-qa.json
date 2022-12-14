@@ -10,7 +10,6 @@
   "sjdboverhang": 75,
   "ref_flat": "/nfs-dev-1-vol-qa-1/reference/rna-seq-references/GRCh38_Verily_v1.Picard_CollectRnaSeqMetrics/GRCh38_Verily_v1.refFlat.txt.gz",
   "ribosomal_interval_list": "/nfs-dev-1-vol-qa-1/reference/rna-seq-references/GRCh38_Verily_v1.Picard_CollectRnaSeqMetrics/GRCh38_Verily_v1.rRNA.interval_list",
-  "container_registry": "ghcr.io",
   "cpus": 1,
   "mem": 4,
   "tempdir": "/icgc-argo-scratch",

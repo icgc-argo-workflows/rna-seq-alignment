@@ -1,0 +1,29 @@
+{
+  "study_id": "TCRB-CA",
+  "analysis_id": "c62cee87-04ae-4988-acee-8704aec988d4",
+  "analysis_metadata": "",
+  "ref_genome_index_star": "test_data/input/test_genome.index_STAR",
+  "ref_genome_index_hisat2": "test_data/input/test_genome.index_HISAT2/index",
+  "ref_genome_gtf": "test_data/input/test_annotation.gtf",
+  "ref_genome_fa": "test_data/input/test_genome.fa",
+  "sequencing_files": [],
+  "sjdboverhang": 100,
+  "ref_flat": "test_data/input/refFlat.hg38.txt.gz",
+  "ribosomal_interval_list": "test_data/input/GRCh38.rRNA.interval_list",
+  "cpus": 1,
+  "mem": 4,
+  "tempdir": "/tmp",
+  "cleanup": true,
+  "lane_qc": false,
+  "aln_qc": false,
+  "song_url": "https://song.rdpc-qa.cancercollaboratory.org",
+  "score_url": "https://score.rdpc-qa.cancercollaboratory.org",
+  "download": {
+    "score_mem": 4,
+    "song_mem": 2,
+    "score_cpus": 2,
+    "score_url": "https://submission-score.rdpc-qa.cancercollaboratory.org",
+    "song_url": "https://submission-song.rdpc-qa.cancercollaboratory.org",
+    "song_cpus": 1
+  }
+}
