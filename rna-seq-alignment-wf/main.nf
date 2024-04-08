@@ -175,7 +175,7 @@ upload_params = [
     *:(params.upload ?: [:])
 ]
 
-include { SongScoreDownload as dnld } from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-download@2.8.0/main.nf' params(download_params)
+include { SongScoreDownload as dnld } from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-download@2.9.0/main.nf' params(download_params)
 include { seqDataToLaneBam as toLaneBam } from "./modules/raw.githubusercontent.com/icgc-argo-workflows/dna-seq-processing-tools/seq-data-to-lane-bam.0.3.3.0/tools/seq-data-to-lane-bam/seq-data-to-lane-bam.nf" params(seqDataToLaneBam_params)
 include { icgcArgoRnaSeqAlignmentSTAR as star } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.6/alignSTAR.nf" params(starAligner_params)
 include { icgcArgoRnaSeqAlignmentHISAT2 as hisat2 } from "./wfpr_modules/github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.3/alignHISAT2.nf" params(hisat2Aligner_params)
@@ -193,12 +193,12 @@ include { payloadGenRnaAlignment as pGenAlnStarSj;  payloadGenRnaAlignment as pG
 include { payloadGenRnaAlignment as pGenQcStar; payloadGenRnaAlignment as pGenQcHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenSuppStar; payloadGenRnaAlignment as pGenSuppHisat2 } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
 include { payloadGenRnaAlignment as pGenQcLane } from './wfpr_modules/github.com/icgc-argo-workflows/data-processing-utility-tools/payload-gen-rna-alignment@0.2.0/main.nf' params(payloadGen_params)
-include { SongScoreUpload as upAlnStar; SongScoreUpload as upAlnHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
-include { SongScoreUpload as upAlnTxStar } from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
-include { SongScoreUpload as upAlnStarSj; SongScoreUpload as upAlnHisat2Sj} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
-include { SongScoreUpload as upQcStar; SongScoreUpload as upQcHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
-include { SongScoreUpload as upSuppStar; SongScoreUpload as upSuppHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
-include { SongScoreUpload as upQcLane} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0/main.nf' params(upload_params)
+include { SongScoreUpload as upAlnStar; SongScoreUpload as upAlnHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
+include { SongScoreUpload as upAlnTxStar } from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
+include { SongScoreUpload as upAlnStarSj; SongScoreUpload as upAlnHisat2Sj} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
+include { SongScoreUpload as upQcStar; SongScoreUpload as upQcHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
+include { SongScoreUpload as upSuppStar; SongScoreUpload as upSuppHisat2} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
+include { SongScoreUpload as upQcLane} from './wfpr_modules/github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3/main.nf' params(upload_params)
 
 
 // please update workflow code as needed

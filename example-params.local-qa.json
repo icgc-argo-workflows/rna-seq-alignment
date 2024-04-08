@@ -16,14 +16,14 @@
   "cleanup": true,
   "lane_qc": false,
   "aln_qc": false,
-  "song_url": "https://song.rdpc-qa.cancercollaboratory.org",
-  "score_url": "https://score.rdpc-qa.cancercollaboratory.org",
+  "song_url": "https://song.rdpc-qa.cumulus.genomeinformatics.org",
+  "score_url": "https://score.rdpc-qa.cumulus.genomeinformatics.org",
   "download": {
     "score_mem": 4,
     "song_mem": 2,
     "score_cpus": 2,
-    "score_url": "https://submission-score.rdpc-qa.cancercollaboratory.org",
-    "song_url": "https://submission-song.rdpc-qa.cancercollaboratory.org",
+    "score_url": "https://submission-score.rdpc-qa.cumulus.genomeinformatics.org",
+    "song_url": "https://submission-song.rdpc-qa.cumulus.genomeinformatics.org",
     "song_cpus": 1
   }
 }

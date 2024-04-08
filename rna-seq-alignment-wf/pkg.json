@@ -14,8 +14,8 @@
         "url": "https://github.com/icgc-argo-workflows/rna-seq-alignment.git"
     },
     "dependencies": [
-        "github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-download@2.8.0",
-        "github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.0",
+        "github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-download@2.9.0",
+        "github.com/icgc-argo-workflows/nextflow-data-processing-utility-tools/song-score-upload@2.9.3",
         "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-hisat2@0.2.3",
         "github.com/icgc-argo-workflows/rna-seq-alignment/genome-alignment-star@0.2.6",
         "github.com/icgc-argo-workflows/argo-qc-tools/fastqc@0.1.0.1",
