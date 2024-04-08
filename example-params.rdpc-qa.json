@@ -12,12 +12,13 @@
   "ribosomal_interval_list": "/nfs-dev-vol-qa-3/reference/rna-seq-references/GRCh38_Verily_v1.Picard_CollectRnaSeqMetrics/GRCh38_Verily_v1.rRNA.interval_list",
   "cpus": 1,
   "mem": 4,
-  "tempdir": "/icgc-argo-scratch",
   "cleanup": true,
   "lane_qc": false,
   "aln_qc": false,
   "song_url": "https://song.rdpc-qa.cumulus.genomeinformatics.org",
   "score_url": "https://score.rdpc-qa.cumulus.genomeinformatics.org",
+  "score_container_version": "5.10.0",
+  "song_container_version": "5.1.1",
   "download": {
     "score_mem": 10,
     "song_mem": 2,
@@ -31,12 +32,12 @@
     "cpus": 4
   },
   "starAligner": {
-    "mem": 80,
-    "cpus": 12    
+    "mem": 30,
+    "cpus": 1    
   },
   "hisat2Aligner": {
-    "mem": 80,
-    "cpus": 12    
+    "mem": 20,
+    "cpus": 4    
   },
   "bamMergeSortMarkdup": {
     "mem": 18,

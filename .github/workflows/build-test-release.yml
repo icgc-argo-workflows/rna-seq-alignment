@@ -19,10 +19,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.11
+    - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
-        python-version: 3.11
+        python-version: "3.10"
         architecture: "x64"
       env:
         AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
@@ -83,10 +83,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.11
+    - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
-        python-version: 3.11
+        python-version: "3.10"
         architecture: "x64"
       env:
         AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
@@ -183,6 +183,8 @@ jobs:
         body: |
           * Release `${{ steps.get_pkg_info.outputs.pkg_name }}.v${{ steps.get_pkg_info.outputs.pkg_ver }}` (${{ github.sha }})
           * Package `${{ steps.prep_assets.outputs.pkg_tar }}` (sha256: `${{ steps.prep_assets.outputs.pkg_tar_sha }}`)
+          * Package URI `github.com/${{ needs.build.outputs.repo_lowercase }}/${{ steps.get_pkg_info.outputs.pkg_name }}@${{ steps.get_pkg_info.outputs.pkg_ver }}`
+          * Run the package: `nextflow run ${{ needs.build.outputs.repo_lowercase }}/${{ steps.get_pkg_info.outputs.pkg_name }}/main.nf -r ${{ steps.get_pkg_info.outputs.pkg_name }}.v${{ steps.get_pkg_info.outputs.pkg_ver }} -params-file <params-json-file>`
         draft: false
         prerelease: false
 

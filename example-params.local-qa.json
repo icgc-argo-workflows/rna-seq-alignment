@@ -18,6 +18,8 @@
   "aln_qc": false,
   "song_url": "https://song.rdpc-qa.cumulus.genomeinformatics.org",
   "score_url": "https://score.rdpc-qa.cumulus.genomeinformatics.org",
+  "score_container_version": "5.10.0",
+  "song_container_version": "5.1.1",
   "download": {
     "score_mem": 4,
     "song_mem": 2,
